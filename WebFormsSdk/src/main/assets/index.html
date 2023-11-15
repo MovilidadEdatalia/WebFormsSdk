@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+<body>
+<section id="seccion_cargar_json">
+  <input type="file" accept=".json" id="json_input">
+  <button id="cargar_json">Cargar JSON</button>
+</section>
+<div id="wizard">
+  <form id="main_form"></form>
+</div>
+
+<hr />
+<section id="send_section">
+  <input type="submit" id="send" value="Aceptar y firmar" form="main_form"></input>
+</section>
+<div id="page_number" class="page-number"></div>
+<div class="toast" id="toast">
+  <div class="toast-content">
+  </div>
+</div>
+<div class="modal"></div>
+
+<script type="module">
+      import JsonForms from 'file:///android_asset/jsonForms.js';
+      window.jsonForms = new JsonForms();
+</script>
+
+</body>
+</html>

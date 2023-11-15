@@ -1,0 +1,94 @@
+button,input[type="submit"] {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button,input[type="submit"] {
+  background-color: #3498db; /* Background color when normal */
+  color: #ffffff; /* Text color when normal */
+}
+button:hover,input[type="submit"] {
+  background-color: #2980b9; /* Background color on hover */
+  color: #ffffff; /* Text color on hover */
+}
+#send_section,#seccion_cargar_json{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+
+}
+#seccion_cargar_json{
+ flex-direction: column;
+}
+#send_section{
+  flex-direction: row;
+  display: none;
+}
+#seccion_cargar_json > input,button{
+  margin: 1rem;
+}
+.modal {
+  display:    none;
+  position:   fixed;
+  z-index:    1000;
+  top:        0;
+  left:       0;
+  height:     100%;
+  width:      100%;
+  background: rgba( 255, 255, 255, .8 )
+  url('https://i.stack.imgur.com/FhHRx.gif')
+  50% 50%
+  no-repeat;
+}
+body.loading {
+  overflow: hidden;
+}
+body.loading .modal {
+  display: block;
+}
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-weight: bold;
+  background: #fdfd82;
+  color: rgb(51, 51, 51);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+.toast.show {
+  display: block;
+}
+.step {
+  display: none;
+}
+.page-number {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2980b9;
+}
+
+.current-page {
+  margin-right: 5px;
+}
+
+.separator {
+  margin: 0 5px;
+}
+
+.total-pages {
+  margin-left: 5px;
+}
