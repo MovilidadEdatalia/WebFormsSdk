@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdk = 21
-        version = "0.2.0"
+        version = "0.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -71,4 +71,23 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+
+                groupId = "com.edatalia"
+                artifactId = "webformssdk"
+            }
+        }
+        repositories {
+            maven {
+                name = "jitpack"
+                setUrl("https://jitpack.io")
+            }
+        }
+    }
 }
