@@ -19,9 +19,10 @@ class WebFormsResultContract: ActivityResultContract<String, WebFormsSdkIntentRe
 
     override fun parseResult(resultCode: Int, intent: Intent?): WebFormsSdkIntentResult {
         if (resultCode == Activity.RESULT_OK) {
-            val uri =
+            val uriString =
                 intent?.getStringExtra(Constants.RESPONSE_URI_STRING)
-            return WebFormsSdkIntentResult(responseUriString = Uri.parse(uri))
+            val jsonString = intent?.getStringExtra(Constants.RESPONSE_JSON_STRING)
+            return WebFormsSdkIntentResult(responseUriString = Uri.parse(uriString), responseJsonString = jsonString)
         }
         else if (resultCode == Activity.RESULT_FIRST_USER) {
             val error =

@@ -64,6 +64,7 @@ fun WebFormsDemoScreen() {
         onResult = { result ->
             val error = result.error
             val uri = result.responseUriString
+            val json = result.responseJsonString
             if (uri != null) {
                 val shareableUri = FileProvider.getUriForFile(
                     context.applicationContext,
@@ -75,6 +76,7 @@ fun WebFormsDemoScreen() {
                 intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 context.startActivity(intent)
             } else if (error != null) {
+                openAlertDialog.value = true
                 alertDialogMessage = error
             }
         }

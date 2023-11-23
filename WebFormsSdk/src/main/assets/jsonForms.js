@@ -2,65 +2,70 @@
 import { Wizard } from "file:///android_asset/wizard.js";
 export default class JsonForms {
     constructor() {
-        // Variable para almacenar el JSON global
-        this.globalJson = {};
-   //
-       // this.init(json);
+        this.#globalJson = {};
     }
-    // Elemento contenedor del formulario
-    /* const inputContainer = document.getElementById("main_form");
-     */
-    init(json, callback) {
-        this.callback = callback;
-        const loadJsonSection = document.getElementById("seccion_cargar_json");
+    #loadJsonButton;
+    #globalJson;
+    #formContainer;
+    #toJson;
+    #callback;
+    #json;
+    init(json = null, callback) {
+        this.#callback = callback;
+        this.#json = json;
+        const loadJsonSection = document.getElementById("load_json_section");
         const sendJsonSection = document.getElementById("send_section");
-        this.loadJsonButton = document.getElementById("cargar_json");
-        this.toJson = document.getElementById("send");
-        this.formContainer = document.getElementById("main_form");
+        this.#loadJsonButton = document.getElementById("load_json_button");
+        this.#toJson = document.getElementById("send");
+        this.#formContainer = document.getElementById("main_form");
         if (json) {
             loadJsonSection.style.display = "none";
             sendJsonSection.style.display = "none";
-            this.loadJsonData(json);
+            try {
+                this.#loadJsonData(json);
+            }
+            catch (error) {
+                this.#callback( JSON.stringify( { type: "error", value: error.message } ));
+            }
         }
-        this.loadJsonButton.addEventListener("click", this.handleJsonSection.bind(this));
-        this.toJson.addEventListener("click", this.converToPDF.bind(this));
-      //  this.callback("Loaded");
+        this.#loadJsonButton.addEventListener("click", this.#handleJsonSection.bind(this));
+        this.#toJson.addEventListener("click", this.#converToPDF.bind(this));
     }
     // Función para renderizar el formulario a partir de los datos JSON
-    renderForm(page, form) {
+    #renderForm(page, form) {
         page.items.forEach((item) => {
             for (const key in item.type) {
                 const elementType = item.type[key];
                 if (key === "input") {
                     if (elementType === "radio" && item.options) {
-                        this.renderRadioInput(item, form);
+                        this.#renderRadioInput(item, form);
                     }
                     else {
-                        this.renderTextInput(item, form);
+                        this.#renderTextInput(item, form);
                     }
                 }
                 else if (key === "text") {
-                    this.renderTextElement(item, form);
+                    this.#renderTextElement(item, form);
                 }
                 else if (key === "image" && item.src) {
-                    this.renderImageElement(item, form);
+                    this.#renderImageElement(item, form);
                 }
                 else if (key === "divider") {
-                    this.renderDivider(elementType, form);
+                    this.#renderDivider(elementType, form);
                 }
                 else if (key === "table") {
-                    this.renderTable(item, form);
+                    this.#renderTable(item, form);
                 }
             }
         });
     }
-    setGeneralStyles(styles) {
+    #setGeneralStyles(styles) {
         for (const key in styles) {
             document.getElementById("wizard").style[key] = styles[key];
         }
     }
     // Función para renderizar elementos de entrada tipo radio
-    renderRadioInput(item, form) {
+    #renderRadioInput(item, form) {
         const legend = document.createElement("legend");
         legend.setAttribute("id", item.id + "_legend");
         form.appendChild(legend);
@@ -70,35 +75,35 @@ export default class JsonForms {
         }
         if (item.options) {
             item.options.forEach((option) => {
-                const input = this.createInputElement(item, option);
-                const label = this.createLabelElement(item, option.value);
+                const input = this.#createInputElement(item, option);
+                const label = this.#createLabelElement(item, option.value);
                 form.appendChild(input);
                 form.appendChild(label);
             });
         }
     }
     // Función para renderizar elementos de entrada de texto
-    renderTextInput(item, form) {
-        const input = this.createInputElement(item);
-        const label = this.createLabelElement(item);
+    #renderTextInput(item, form) {
+        const input = this.#createInputElement(item);
+        const label = this.#createLabelElement(item);
         form.appendChild(label);
         form.appendChild(input);
     }
     // Función para crear elementos de entrada de texto o radio
-    createInputElement(item, value) {
+    #createInputElement(item, value) {
         const input = document.createElement("input");
-        this.setInputAttributes(item, value, input);
-        this.inputValueChanged(item, input);
-        this.addCss(item, input);
+        this.#setInputAttributes(item, value, input);
+        this.#inputValueChanged(item, input);
+        this.#addCss(item, input);
         return input;
     }
-    renderDivider(item, form) {
-        const divider = this.createDividerElement(item);
+    #renderDivider(item, form) {
+        const divider = this.#createDividerElement(item);
         if (divider) {
             form.appendChild(divider);
         }
     }
-    createDividerElement(item) {
+    #createDividerElement(item) {
         let divider;
         if (item === "br") {
             divider = document.createElement("br");
@@ -113,7 +118,7 @@ export default class JsonForms {
         return divider;
     }
     // Función para crear etiquetas de elementos de entrada
-    createLabelElement(item, value) {
+    #createLabelElement(item, value) {
         const label = document.createElement("label");
         label.setAttribute("for", item.id);
         if (value) {
@@ -125,11 +130,11 @@ export default class JsonForms {
         if (item.visible === false) {
             label.style.display = "none";
         }
-        this.addCss(item, label);
+        this.#addCss(item, label);
         return label;
     }
     // Función para renderizar elementos de texto
-    renderTextElement(item, form) {
+    #renderTextElement(item, form) {
         const text = document.createElement(item.type.text);
         text.textContent = item.label;
         if (item.css) {
@@ -140,42 +145,43 @@ export default class JsonForms {
         if (item.visible === false) {
             text.style.display = "none";
         }
-        this.addCss(item, text);
+        this.#addCss(item, text);
         form.appendChild(text);
     }
     // Función para renderizar elementos de imagen
-    renderImageElement(item, form) {
+    #renderImageElement(item, form) {
         const image = document.createElement("img");
         image.src = item.src;
         form.appendChild(image);
         if (item.visible === false) {
             image.style.display = "none";
         }
-        this.addCss(item, image);
+        this.#addCss(item, image);
     }
     //función para renderizar tablas
-    renderTable(item, form) {
-        const table = this.createTableElement(item);
+    #renderTable(item, form) {
+        const table = this.#createTableElement(item);
         form.appendChild(table);
     }
-    createTableElement(item) {
+    #createTableElement(item) {
         const table = document.createElement("table");
-        this.createTableHead(item, table);
-        this.createTableData(item, table);
-        this.addCss(item, table);
+        this.#createTableHead(item, table);
+        this.#createTableData(item, table);
+        this.#addCss(item, table);
         return table;
     }
-    createTableHead(item, table) {
+    #createTableHead(item, table) {
         const thRows = item.cells.th;
         const thRow = table.insertRow();
         //crea filas de cabecera
         thRows.forEach((element) => {
-            const cell = thRow.insertCell();
-            cell.innerHTML = element;
+            const th = document.createElement("th"); // create th element
+            th.innerHTML = element;
+            thRow.appendChild(th);
             //addCss(item, cell);
         });
     }
-    createTableData(item, table) {
+    #createTableData(item, table) {
         const trRows = item.cells.tr;
         //crea filas de datos
         trRows.forEach((element) => {
@@ -190,7 +196,7 @@ export default class JsonForms {
         });
     }
     //Función para añadir CSS
-    addCss(item, type) {
+    #addCss(item, type) {
         if (item.css) {
             for (var key in item.css) {
                 type.style[key] = item.css[key];
@@ -198,7 +204,7 @@ export default class JsonForms {
         }
     }
     //Función para setear todas las propiedades de los inputs
-    setInputAttributes(item, value, input) {
+    #setInputAttributes(item, value, input) {
         input.name = item.id;
         input.id = item.id;
         input.type = item.type.input;
@@ -237,7 +243,7 @@ export default class JsonForms {
             input.setAttribute("value", today);
         }
     }
-    inputValueChanged(item, input) {
+    #inputValueChanged(item, input) {
         input.addEventListener("input", function (event) {
             if (input.type === "radio") {
                 const radioButtons = document.querySelectorAll(`input[type="radio"][name=${input.name}]`);
@@ -262,6 +268,7 @@ export default class JsonForms {
                                         element.setAttribute("required", combo.required);
                                     }
                                 }
+                                legend.style.display = "block";
                             }
                             else {
                                 labels.forEach((label) => {
@@ -271,6 +278,7 @@ export default class JsonForms {
                                     const element = elements[index];
                                     element.style.display = "none";
                                     labels.forEach((label) => {
+                                        console.log(label);
                                         label.style.display = "none";
                                     });
                                     if (legend) {
@@ -279,7 +287,6 @@ export default class JsonForms {
                                     element.required = false;
                                 }
                             }
-                            legend.style.display = "block";
                         }
                     });
                 }
@@ -303,7 +310,7 @@ export default class JsonForms {
             }
         });
     }
-    changeStylesBeforePDF() {
+    #changeStylesBeforePDF() {
         const dateInputs = document.querySelectorAll('input[type="date"]');
         const stepElements = document.querySelectorAll("div.step");
         // Quitar el borde de los inputs
@@ -319,7 +326,7 @@ export default class JsonForms {
             step.style.display = "block";
         });
     }
-    startWizard() {
+    #startWizard() {
         let self = this;
         const sendJsonSection = document.getElementById("send_section");
         const nextButton = document.createElement("button");
@@ -330,22 +337,22 @@ export default class JsonForms {
         prevButton.innerHTML = "Atrás";
         prevButton.style.display = "none";
         nextButton.style.display = "none";
-        self.toJson.style.display = "none";
+        self.#toJson.style.display = "none";
         sendJsonSection.insertBefore(nextButton, sendJsonSection.firstChild);
         sendJsonSection.insertBefore(prevButton, sendJsonSection.firstChild);
         //TODO: CREAR CLASE INSTANCIA WIZARD
-        const wizard = new Wizard(this.formContainer);
+        const wizard = new Wizard(this.#formContainer);
         if (wizard.getFormSteps() > 1) {
             nextButton.style.display = "block";
         }
         if (wizard.isLastPage()) {
-            self.toJson.style.display = "block";
+            self.#toJson.style.display = "block";
         }
         document.querySelector(".next").addEventListener("click", function () {
             prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
             nextButton.style.display = wizard.isLastPage() ? "none" : "block";
             if (wizard.isLastPage()) {
-                self.toJson.style.display = "block";
+                self.#toJson.style.display = "block";
             }
         });
         document.querySelector(".prev").addEventListener("click", function () {
@@ -354,14 +361,14 @@ export default class JsonForms {
                 nextButton.style.display = "block";
             }
             if (!wizard.isLastPage()) {
-                self.toJson.style.display = "none";
+                self.#toJson.style.display = "none";
             }
         });
     }
     // Función para generar un nuevo JSON a partir de los valores de los inputs
-    generateJSONFromInputs() {
+    #generateJSONFromInputs() {
         const inputs = document.querySelectorAll("#main_form input");
-        const clonedObject = this.globalJson;
+        const clonedObject = this.#globalJson;
         const outputJSON = {};
         clonedObject.form.pages.forEach((page) => {
             page.items.forEach((item) => {
@@ -388,23 +395,24 @@ export default class JsonForms {
                 }
             });
         });
-        this.callback({
-            type: "outputJSON",
-            value: JSON.stringify(outputJSON, null, 2),
-        });
+        const pageHTML = document.getElementById("main_form").outerHTML;
+        this.#callback( JSON.stringify( {
+            type: "output",
+            json: outputJSON,
+            html: pageHTML,
+        }));
     }
-    converToPDF() {
-
-        this.callback(document.getElementById("main_form").outerHTML);
-
+    #converToPDF() {
         let self = this;
         const form = document.getElementById("main_form");
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             if (form.checkValidity()) {
-                self.generateJSONFromInputs();
-                self.changeStylesBeforePDF();
-                const pageHTML = document.getElementById("main_form").outerHTML;
+                self.#generateJSONFromInputs();
+                if (self.#json)
+                    return;
+                self.#changeStylesBeforePDF();
+                const pageHTML = document.getElementById("wizard").outerHTML;
                 const blob = new Blob([pageHTML], { type: "text/html" });
                 const formData = new FormData();
                 formData.append("file", blob);
@@ -415,25 +423,14 @@ export default class JsonForms {
                 })
                     .then((response) => response.blob())
                     .then((blob) => {
-                    // Create a URL for the Blob
-                    const pdfBlob = new Blob([blob], { type: "application/pdf" });
-                    // Crear un FileReader para leer el blob como un ArrayBuffer
-                    const reader = new FileReader();
-                    reader.onload = function () {
-                        // Obtener el ArrayBuffer
-                        const arrayBuffer = reader.result;
-                        // Convertir el ArrayBuffer en una matriz de bytes (Uint8Array)
-                        const uint8Array = new Uint8Array(arrayBuffer);
-                        // Guardar la matriz de bytes en el localStorage como una cadena codificada en base64
-                        localStorage.setItem("pdfData", btoa(String.fromCharCode.apply(null, uint8Array)));
-                        // Redirigir a la página HTML donde deseas recuperar el PDF
-                        window.location.href = "websign.html";
-                    };
-                    reader.readAsArrayBuffer(pdfBlob);
-                    //URL.revokeObjectURL(pdfUrl);
+                    self.#callback({ type: "success", value: blob });
                 })
                     .catch((error) => {
                     console.error("Error al cargar el archivo JSON: ", error);
+                    self.#callback({
+                        type: "error",
+                        message: "Error al cargar el archivo JSON: ",
+                    });
                 })
                     .finally(() => {
                     document.body.classList.remove("loading");
@@ -441,24 +438,21 @@ export default class JsonForms {
             }
         });
     }
-    loadJsonData(jsonData) {
-        const loadJsonSection = document.getElementById("seccion_cargar_json");
+    #loadJsonData(jsonData) {
+        const loadJsonSection = document.getElementById("load_json_section");
         const sendJsonSection = document.getElementById("send_section");
-        let widget = {};
-        this.globalJson = jsonData;
+        this.#globalJson = jsonData;
         loadJsonSection.style.display = "none";
         sendJsonSection.style.display = "flex";
-        widget = this.globalJson.widget;
-        localStorage.setItem("widget", JSON.stringify(widget));
         jsonData.form.pages.forEach((element, i) => {
             const stepContainer = document.createElement("div");
             stepContainer.setAttribute("class", "step");
-            this.formContainer.appendChild(stepContainer);
-            this.renderForm(element, stepContainer);
+            this.#formContainer.appendChild(stepContainer);
+            this.#renderForm(element, stepContainer);
         });
-        this.startWizard();
+        this.#startWizard();
     }
-    handleJsonSection() {
+    #handleJsonSection() {
         const fileInput = document.getElementById("json_input");
         const file = fileInput.files[0];
         const toast = document.getElementById("toast");
@@ -468,8 +462,8 @@ export default class JsonForms {
             reader.onload = function (event) {
                 const jsonContent = event.target.result;
                 const jsonData = JSON.parse(jsonContent);
-                self.loadJsonData(jsonData);
-                self.setGeneralStyles(jsonData.form.generalStyles);
+                self.#loadJsonData(jsonData);
+                self.#setGeneralStyles(jsonData.form.generalStyles);
             };
             reader.readAsText(file);
             fileInput.value = "";
@@ -479,8 +473,8 @@ export default class JsonForms {
             fetch("data.json")
                 .then((response) => response.json())
                 .then((data) => {
-                this.loadJsonData(data);
-                this.setGeneralStyles(data.form.generalStyles);
+                this.#loadJsonData(data);
+                this.#setGeneralStyles(data.form.generalStyles);
                 toast.classList.remove("show");
             })
                 .catch((error) => {

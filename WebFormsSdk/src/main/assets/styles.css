@@ -18,21 +18,21 @@ button:hover,input[type="submit"] {
   background-color: #2980b9; /* Background color on hover */
   color: #ffffff; /* Text color on hover */
 }
-#send_section,#seccion_cargar_json{
+#send_section,#load_json_section{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 2rem;
 
 }
-#seccion_cargar_json{
+#load_json_section{
  flex-direction: column;
 }
 #send_section{
   flex-direction: row;
   display: none;
 }
-#seccion_cargar_json > input,button{
+#load_json_section > input,button{
   margin: 1rem;
 }
 .modal {

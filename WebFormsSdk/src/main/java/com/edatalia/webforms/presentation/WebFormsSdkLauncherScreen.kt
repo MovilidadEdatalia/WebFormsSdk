@@ -17,16 +17,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import com.edatalia.webforms.domain.Constants
+import org.json.JSONObject
 import java.io.File
 import java.util.UUID
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebFormsSdkLauncherScreen(uri: Uri) {
-    val context = LocalContext.current as Activity
+    val activity = LocalContext.current as Activity
     var jsonFormsString: String? = null
     LaunchedEffect(Unit) {
-        val jsonBytes = context.contentResolver.openInputStream(uri).use {
+        val jsonBytes = activity.contentResolver.openInputStream(uri).use {
             it?.readBytes()
         }
         jsonFormsString = jsonBytes?.decodeToString()
@@ -36,13 +37,13 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
                 Constants.RESPONSE_ERROR_STRING,
                 "Input not valid"
             )
-            context.setResult(ComponentActivity.RESULT_FIRST_USER, resultIntent)
-            context.finish()
+            activity.setResult(ComponentActivity.RESULT_FIRST_USER, resultIntent)
+            activity.finish()
             return@LaunchedEffect
         }
     }
     AndroidView(
-        factory = { WebView(context) },
+        factory = { WebView(activity) },
         update = {
             it.apply {
                 settings.javaScriptEnabled = true
@@ -50,27 +51,38 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
                 settings.allowFileAccessFromFileURLs = true
                 addJavascriptInterface(object {
                     @JavascriptInterface
-                    fun postMessage(formHtml: String) {
+                    fun postMessage(messageFromCallbackJsonString: String) {
                         try {
-                            val converter = PdfConverter.getInstance()
-                            val file = File(
-                                context.getExternalFilesDir(null),
-                                "${UUID.randomUUID()}.pdf"
-                            )
-                            converter.convert(context, formHtml, file)
-                            val resultIntent = Intent()
-                            resultIntent.putExtra(Constants.RESPONSE_URI_STRING, file.toUri().toString())
-                            context.setResult(ComponentActivity.RESULT_OK, resultIntent)
-                            context.finish()
-                            return
+                            val jsonObject = JSONObject(messageFromCallbackJsonString)
+                            val type = jsonObject.getString("type")
+                            if (type == "output") {
+                                val json = jsonObject.getJSONObject("json")
+                                val html = jsonObject.getString("html")
+                                val converter = PdfConverter.getInstance()
+                                val file = File(
+                                    activity.getExternalFilesDir(null),
+                                    "${UUID.randomUUID()}.pdf"
+                                )
+                                converter.convert(activity, html, file)
+                                val resultIntent = Intent()
+                                resultIntent.putExtra(Constants.RESPONSE_URI_STRING, file.toUri().toString())
+                                resultIntent.putExtra(Constants.RESPONSE_JSON_STRING, json.toString())
+                                activity.setResult(ComponentActivity.RESULT_OK, resultIntent)
+                                activity.finish()
+                                return
+
+                            } else if (type == "error") {
+                                val value = jsonObject.getString("value")
+                                throw Exception(value)
+                            }
                         } catch (exception: Exception) {
                             val resultIntent = Intent()
                             resultIntent.putExtra(
                                 Constants.RESPONSE_ERROR_STRING,
-                                exception
+                                exception.toString()
                             )
-                            context.setResult(ComponentActivity.RESULT_FIRST_USER, resultIntent)
-                            context.finish()
+                            activity.setResult(ComponentActivity.RESULT_FIRST_USER, resultIntent)
+                            activity.finish()
                             return
                         }
                     }
