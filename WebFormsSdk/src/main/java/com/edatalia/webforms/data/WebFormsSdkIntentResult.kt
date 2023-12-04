@@ -2,4 +2,7 @@ package com.edatalia.webforms.data
 
 import android.net.Uri
 
-data class WebFormsSdkIntentResult @JvmOverloads constructor(val responseUriString: Uri? = null, val responseJsonString: String? = null, val error: String? = null)
+data class WebFormsSdkIntentResult @JvmOverloads constructor(
+    val responseUriString: Uri? = null,
+    val responseJsonString: String? = null,
+    val error: String? = null)

@@ -113,7 +113,7 @@ export default class JsonForms {
         }
         else if (item === "page-break") {
             divider = document.createElement("div");
-            divider.style.pageBreakAfter = "always";
+            divider.style.pageBreakBefore = "always";
         }
         return divider;
     }

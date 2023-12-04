@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.print.PdfConverter
+import android.print.HtmlToPdfConverter
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -47,7 +47,6 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
         update = {
             it.apply {
                 settings.javaScriptEnabled = true
-                settings.domStorageEnabled = true
                 settings.allowFileAccessFromFileURLs = true
                 addJavascriptInterface(object {
                     @JavascriptInterface
@@ -58,19 +57,25 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
                             if (type == "output") {
                                 val json = jsonObject.getJSONObject("json")
                                 val html = jsonObject.getString("html")
-                                val converter = PdfConverter.getInstance()
+                                val converter = HtmlToPdfConverter.instance
                                 val file = File(
                                     activity.getExternalFilesDir(null),
                                     "${UUID.randomUUID()}.pdf"
                                 )
-                                converter.convert(activity, html, file)
-                                val resultIntent = Intent()
-                                resultIntent.putExtra(Constants.RESPONSE_URI_STRING, file.toUri().toString())
-                                resultIntent.putExtra(Constants.RESPONSE_JSON_STRING, json.toString())
-                                activity.setResult(ComponentActivity.RESULT_OK, resultIntent)
-                                activity.finish()
-                                return
-
+                                converter.convert(activity, html, file) {
+                                    val resultIntent = Intent()
+                                    resultIntent.putExtra(
+                                        Constants.RESPONSE_URI_STRING,
+                                        file.toUri().toString()
+                                    )
+                                    resultIntent.putExtra(
+                                        Constants.RESPONSE_JSON_STRING,
+                                        json.toString()
+                                    )
+                                    activity.setResult(ComponentActivity.RESULT_OK, resultIntent)
+                                    activity.finish()
+                                    return@convert
+                                }
                             } else if (type == "error") {
                                 val value = jsonObject.getString("value")
                                 throw Exception(value)

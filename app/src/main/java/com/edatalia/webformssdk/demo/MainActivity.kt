@@ -85,7 +85,7 @@ fun WebFormsDemoScreen() {
     val getJsonDocument = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { result ->
-            jsonFileUri.value = result
+            getTransformedDocument.launch(result.toString())
         }
     )
 
@@ -102,34 +102,9 @@ fun WebFormsDemoScreen() {
             onClick = {
                 getJsonDocument.launch(arrayOf("application/json"))
             }) {
-            Text("Cargar configuración")
+            Text("Seleccionar configuración")
         }
 
-        jsonFileUri.value?.let { uri ->
-            var name = uri.toString()
-            try {
-                context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    cursor.moveToFirst()
-                    name = cursor.getString(nameIndex)
-                    cursor.close()
-                }
-            } catch (e: Exception) {}
-            Text(
-                text = name,
-                maxLines = 1,
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        Button(enabled = jsonFileUri.value != null, onClick = {
-            jsonFileUri.value?.let {
-                getTransformedDocument.launch(it.toString())
-            }
-        }) {
-            Text("Continuar")
-        }
 
         if (openAlertDialog.value) {
             AlertDialog(
