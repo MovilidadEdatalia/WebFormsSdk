@@ -25,7 +25,7 @@ export default class JsonForms {
                 this.#loadJsonData(json);
             }
             catch (error) {
-                this.#callback( JSON.stringify( { type: "error", value: error.message } ));
+                this.#callback(JSON.stringify({ type: "error", value: error.message }));
             }
         }
         this.#loadJsonButton.addEventListener("click", this.#handleJsonSection.bind(this));
@@ -34,28 +34,25 @@ export default class JsonForms {
     // Función para renderizar el formulario a partir de los datos JSON
     #renderForm(page, form) {
         page.items.forEach((item) => {
-            for (const key in item.type) {
-                const elementType = item.type[key];
-                if (key === "input") {
-                    if (elementType === "radio" && item.options) {
-                        this.#renderRadioInput(item, form);
-                    }
-                    else {
-                        this.#renderTextInput(item, form);
-                    }
+            if (item.type === "input") {
+                if (item.subType === "radio" && item.options) {
+                    this.#renderRadioInput(item, form);
                 }
-                else if (key === "text") {
-                    this.#renderTextElement(item, form);
+                else {
+                    this.#renderTextInput(item, form);
                 }
-                else if (key === "image" && item.src) {
-                    this.#renderImageElement(item, form);
-                }
-                else if (key === "divider") {
-                    this.#renderDivider(elementType, form);
-                }
-                else if (key === "table") {
-                    this.#renderTable(item, form);
-                }
+            }
+            else if (item.type === "text") {
+                this.#renderTextElement(item, form);
+            }
+            else if (item.type === "image" && item.src) {
+                this.#renderImageElement(item, form);
+            }
+            else if (item.type === "divider") {
+                this.#renderDivider(item.subType, form);
+            }
+            else if (item.type === "table") {
+                this.#renderTable(item, form);
             }
         });
     }
@@ -111,7 +108,7 @@ export default class JsonForms {
         else if (item === "hr") {
             divider = document.createElement("hr");
         }
-        else if (item === "page-break") {
+        else if (item === "pageBreak") {
             divider = document.createElement("div");
             divider.style.pageBreakBefore = "always";
         }
@@ -135,7 +132,7 @@ export default class JsonForms {
     }
     // Función para renderizar elementos de texto
     #renderTextElement(item, form) {
-        const text = document.createElement(item.type.text);
+        const text = document.createElement(item.subType);
         text.textContent = item.label;
         if (item.css) {
             for (const key in item.css) {
@@ -207,7 +204,7 @@ export default class JsonForms {
     #setInputAttributes(item, value, input) {
         input.name = item.id;
         input.id = item.id;
-        input.type = item.type.input;
+        input.type = item.subType;
         if (item.value) {
             input.setAttribute("value", item.value);
             input.setAttribute("size", input.value.length + "px");
@@ -218,7 +215,7 @@ export default class JsonForms {
         if (value) {
             input.value = value.value;
         }
-        if (input.type === "radio" && value.checked) {
+        if (input.subType === "radio" && value.checked) {
             input.setAttribute("checked", "checked");
         }
         if (item.editable === false) {
@@ -278,7 +275,6 @@ export default class JsonForms {
                                     const element = elements[index];
                                     element.style.display = "none";
                                     labels.forEach((label) => {
-                                        console.log(label);
                                         label.style.display = "none";
                                     });
                                     if (legend) {
@@ -372,31 +368,29 @@ export default class JsonForms {
         const outputJSON = {};
         clonedObject.form.pages.forEach((page) => {
             page.items.forEach((item) => {
-                for (const key in item.type) {
-                    if (key === "input" && item.id) {
-                        inputs.forEach((input) => {
-                            if (item.id === input.id) {
-                                if (input.type === "radio" && input.checked) {
-                                    outputJSON[item.id] = input.value;
-                                }
-                                else if ([
-                                    "date",
-                                    "email",
-                                    "text",
-                                    "tel",
-                                    "password",
-                                    "number",
-                                ].indexOf(input.type)) {
-                                    outputJSON[item.id] = input.value;
-                                }
+                if (item.type === "input" && item.id) {
+                    inputs.forEach((input) => {
+                        if (item.id === input.id) {
+                            if (input.type === "radio" && input.checked) {
+                                outputJSON[item.id] = input.value;
                             }
-                        });
-                    }
+                            else if ([
+                                "date",
+                                "email",
+                                "text",
+                                "tel",
+                                "password",
+                                "number",
+                            ].indexOf(input.type)) {
+                                outputJSON[item.id] = input.value;
+                            }
+                        }
+                    });
                 }
             });
         });
         const pageHTML = document.getElementById("main_form").outerHTML;
-        this.#callback( JSON.stringify( {
+        this.#callback(JSON.stringify({
             type: "output",
             json: outputJSON,
             html: pageHTML,
@@ -423,14 +417,14 @@ export default class JsonForms {
                 })
                     .then((response) => response.blob())
                     .then((blob) => {
+                    console.log(blob);
                     self.#callback({ type: "success", value: blob });
                 })
                     .catch((error) => {
-                    console.error("Error al cargar el archivo JSON: ", error);
-                    self.#callback({
+                    self.#callback(JSON.stringify({
                         type: "error",
-                        message: "Error al cargar el archivo JSON: ",
-                    });
+                        message: error,
+                    }));
                 })
                     .finally(() => {
                     document.body.classList.remove("loading");
