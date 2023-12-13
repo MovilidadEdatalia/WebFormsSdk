@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.edatalia.webformssdk"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
-        version = "0.5.0"
+        version = "0.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
