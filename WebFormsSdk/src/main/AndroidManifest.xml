@@ -3,7 +3,7 @@
     <application>
         <activity
             android:name="com.edatalia.webforms.presentation.WebFormsSdkLauncher"
-            android:screenOrientation="nosensor"
+            android:configChanges="orientation|screenSize"
             android:exported="true" />
     </application>
 </manifest>

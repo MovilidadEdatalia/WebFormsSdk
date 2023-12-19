@@ -62,6 +62,8 @@ fun WebFormsDemoScreen() {
             val error = result.error
             val uri = result.responseUriString
             val json = result.responseJsonString
+            val rejected = result.rejected
+
             if (uri != null) {
                 val shareableUri = FileProvider.getUriForFile(
                     context.applicationContext,

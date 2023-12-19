@@ -23,12 +23,14 @@ class WebFormsResultContract: ActivityResultContract<String, WebFormsSdkIntentRe
                 intent?.getStringExtra(Constants.RESPONSE_URI_STRING)
             val jsonString = intent?.getStringExtra(Constants.RESPONSE_JSON_STRING)
             return WebFormsSdkIntentResult(responseUriString = Uri.parse(uriString), responseJsonString = jsonString)
-        }
-        else if (resultCode == Activity.RESULT_FIRST_USER) {
+        } else if (resultCode == Activity.RESULT_FIRST_USER) {
             val error =
                 intent?.getStringExtra(Constants.RESPONSE_ERROR_STRING)
             return WebFormsSdkIntentResult(error = error)
+        } else if (resultCode == Constants.RESPONSE_REJECT_CODE) {
+            return WebFormsSdkIntentResult(rejected = true)
+        } else {
+            return WebFormsSdkIntentResult()
         }
-        return WebFormsSdkIntentResult()
     }
 }

@@ -13,7 +13,7 @@ export class Wizard {
             .addEventListener("click", this.onPrevClick.bind(this));
     }
     onNextClick() {
-        const currentPage = document.getElementById("current_page");
+        const currentPage = document.getElementById("webforms_current_page");
         if (this.currentStep < this.steps.length - 1 &&
             this.form.reportValidity()) {
             this.currentStep++;
@@ -24,7 +24,7 @@ export class Wizard {
         }
     }
     onPrevClick() {
-        const currentPage = document.getElementById("current_page");
+        const currentPage = document.getElementById("webforms_current_page");
         if (this.currentStep > 0 && this.form.reportValidity()) {
             this.currentStep--;
             if (currentPage) {
@@ -37,6 +37,9 @@ export class Wizard {
         this.steps.forEach((s, index) => {
             const isCurrentStep = index === step;
             s.style.display = isCurrentStep ? "block" : "none";
+            window.scrollTo({
+                top: 0,
+            });
             this.setInputDisabled(s, !isCurrentStep);
         });
     }
@@ -47,12 +50,12 @@ export class Wizard {
         });
     }
     printPaginator() {
-        const container = document.getElementById("page_number");
+        const container = document.getElementById("webforms_page_number");
         const currentPage = document.createElement("span");
         const separator = document.createElement("span");
         const totalPages = document.createElement("span");
         currentPage.setAttribute("class", "current-page");
-        currentPage.setAttribute("id", "current_page");
+        currentPage.setAttribute("id", "webforms_current_page");
         separator.setAttribute("class", "separator");
         totalPages.setAttribute("class", "total-pages");
         currentPage.innerHTML = (this.currentStep + 1).toString();

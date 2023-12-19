@@ -46,7 +46,9 @@ class HtmlToPdfConverter private constructor() : Runnable {
                     })
             }
         }
-        mWebView!!.loadData(mHtmlString!!, "text/html", "UTF-8")
+        mWebView!!.loadData( "<head>\n" +
+                "  <meta charset=\"UTF-8\">\n" +
+                "</head>\n" +  mHtmlString!!, "text/html", "UTF-8")
     }
 
     var pdfPrintAttrs: PrintAttributes?
