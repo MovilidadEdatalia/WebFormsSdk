@@ -79,6 +79,8 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
         AndroidView(
             factory = {
                 WebView(activity).apply {
+                    settings.builtInZoomControls = true
+                    settings.displayZoomControls = false
                     settings.javaScriptEnabled = true
                     settings.allowFileAccessFromFileURLs = true
                     addJavascriptInterface(object {

@@ -436,11 +436,10 @@ export default class JsonForms {
                 }
             });
         });
-        const pageHTML = document.getElementById("webforms_main_form").outerHTML;
         this.#callback(JSON.stringify({
             type: "output",
             json: outputJSON,
-            html: pageHTML,
+            html: this.#outerHTMLstructure(),
         }));
     }
     isRadioGroupChecked(groupName) {
@@ -456,6 +455,21 @@ export default class JsonForms {
             default:
                 return input.value;
         }
+    }
+    #outerHTMLstructure() {
+        const formHTML = document.getElementById("webforms_main_form").outerHTML;
+        const wrapperHTML = `
+          <!DOCTYPE html>
+          <html lang="es">
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body>
+              ${formHTML}
+            </body>
+          </html>
+    `;
+        return wrapperHTML;
     }
     #converToPDF() {
         let self = this;
