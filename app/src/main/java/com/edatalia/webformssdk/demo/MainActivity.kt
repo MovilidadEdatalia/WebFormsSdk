@@ -99,7 +99,7 @@ fun WebFormsDemoScreen() {
         Button(
             modifier = Modifier.padding(),
             onClick = {
-                getJsonDocument.launch(arrayOf("application/json"))
+                getJsonDocument.launch(arrayOf("application/octet-stream", "application/json"))
             }) {
             Text("Seleccionar configuración")
         }
