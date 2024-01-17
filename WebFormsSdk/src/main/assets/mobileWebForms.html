@@ -525,8 +525,8 @@
           }
           if (item.today) {
             let d = new Date();
-            let curr_date = d.getDate();
-            let curr_month = d.getMonth() + 1; //Months are zero based
+            let curr_date = ("0" + d.getDate()).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
+            let curr_month = ("0" + (d.getMonth() + 1)).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
             let curr_year = d.getFullYear();
             let today = curr_year + "-" + curr_month + "-" + curr_date;
             input.valueAsDate = new Date();
