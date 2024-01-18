@@ -731,7 +731,7 @@
           }
         }
         outerHTMLstructure() {
-          const formHTML = document.getElementById("webforms_main_form").outerHTML;
+          const formHTML = document.getElementById("webforms_wizard").outerHTML;
           const wrapperHTML = `
 
 				<!DOCTYPE html>
@@ -782,10 +782,12 @@
           });
         }
         loadJsonData(jsonData) {
+
           const loadJsonSection = document.getElementById("webforms_load_json_section");
           const sendJsonSection = document.getElementById("webforms_send_section");
           this.globalJson = jsonData;
           loadJsonSection.style.display = "none";
+          this.setGeneralStyles(jsonData.generalStyles);
           try {
             jsonData.pages.forEach((element, i) => {
               const stepContainer = document.createElement("div");
