@@ -1,529 +1,631 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <style>
-      button,
-      input[type="submit"] {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+  <style>button,input[type="submit"] {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button,input[type="submit"] {
+  background-color: #3498db; /* Background color when normal */
+  color: #ffffff; /* Text color when normal */
+}
+button:hover,input[type="submit"] {
+  background-color: #2980b9; /* Background color on hover */
+  color: #ffffff; /* Text color on hover */
+}
+#webforms_send_section,#webforms_load_json_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
 
-      button,
-      input[type="submit"] {
-        background-color: #3498db;
-        /* Background color when normal */
-        color: #ffffff;
-        /* Text color when normal */
-      }
+}
+#webforms_load_json_section{
+ flex-direction: column;
+}
+#webforms_send_section{
+  flex-direction: row;
+  display: none;
+}
+#webforms_load_json_section > input,button{
+  margin: 1rem;
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(165, 165, 165, 0.7);
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
 
-      button:hover,
-      input[type="submit"] {
-        background-color: #2980b9;
-        /* Background color on hover */
-        color: #ffffff;
-        /* Text color on hover */
-      }
+.loader {
+  border: 4px solid #3498db; /* Color azul */
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
 
-      #webforms_send_section,
-      #webforms_load_json_section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 2rem;
-      }
+body.loading {
+  overflow: hidden;
+}
+body.loading .modal {
+  display: block;
+}
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-weight: bold;
+  background: #fdfd82;
+  color: rgb(51, 51, 51);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+.toast.show {
+  display: block;
+}
+.step {
+  display: none;
+}
+.page-number {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2980b9;
+}
 
-      #webforms_load_json_section {
-        flex-direction: column;
-      }
+.current-page {
+  margin-right: 5px;
+}
 
-      #webforms_send_section {
-        flex-direction: row;
-        display: none;
-      }
+.separator {
+  margin: 0 5px;
+}
 
-      #webforms_load_json_section>input,
-      button {
-        margin: 1rem;
-      }
+.total-pages {
+  margin-left: 5px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}</style><style>button,input[type="submit"] {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button,input[type="submit"] {
+  background-color: #3498db; /* Background color when normal */
+  color: #ffffff; /* Text color when normal */
+}
+button:hover,input[type="submit"] {
+  background-color: #2980b9; /* Background color on hover */
+  color: #ffffff; /* Text color on hover */
+}
+#webforms_send_section,#webforms_load_json_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
 
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(165, 165, 165, 0.7);
-      }
+}
+#webforms_load_json_section{
+ flex-direction: column;
+}
+#webforms_send_section{
+  flex-direction: row;
+  display: none;
+}
+#webforms_load_json_section > input,button{
+  margin: 1rem;
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(165, 165, 165, 0.7);
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
 
-      .modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-      }
+.loader {
+  border: 4px solid #3498db; /* Color azul */
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
 
-      .loader {
-        border: 4px solid #3498db;
-        /* Color azul */
-        border-top: 4px solid transparent;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
-      }
+body.loading {
+  overflow: hidden;
+}
+body.loading .modal {
+  display: block;
+}
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-weight: bold;
+  background: #fdfd82;
+  color: rgb(51, 51, 51);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+.toast.show {
+  display: block;
+}
+.step {
+  display: none;
+}
+.page-number {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2980b9;
+}
 
-      body.loading {
-        overflow: hidden;
-      }
+.current-page {
+  margin-right: 5px;
+}
 
-      body.loading .modal {
-        display: block;
-      }
+.separator {
+  margin: 0 5px;
+}
 
-      .toast {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        font-weight: bold;
-        background: #fdfd82;
-        color: rgb(51, 51, 51);
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        z-index: 999;
-      }
-
-      .toast.show {
-        display: block;
-      }
-
-      .step {
-        display: none;
-      }
-
-      .page-number {
-        display: flex;
-        justify-content: center;
-        font-size: 1rem;
-        font-weight: bold;
-        color: #2980b9;
-      }
-
-      .current-page {
-        margin-right: 5px;
-      }
-
-      .separator {
-        margin: 0 5px;
-      }
-
-      .total-pages {
-        margin-left: 5px;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-</head>
-<body>
-<section id="webforms_load_json_section" style="display: none;">
-  <input type="file" accept=".json" id="webforms_json_input">
-  <button id="webforms_load_json_button">Cargar JSON</button>
-</section>
-<div id="webforms_wizard">
-  <form id="webforms_main_form"></form>
-</div>
-<hr />
-<section id="webforms_send_section">
-  <input type="submit" id="webforms_send" value="Aceptar y firmar" form="webforms_main_form"></input>
-</section>
-<div id="webforms_page_number" class="page-number"></div>
-<div class="toast" id="webforms_toast">
-  <div class="toast-content"></div>
-</div>
-<div class="modal">
-  <div class="modal-content">
-    <div class="loader"></div>
+.total-pages {
+  margin-left: 5px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}</style></head>
+  <body>
+    <section id="webforms_load_json_section" style="display: none;">
+        <input type="file" accept=".json" id="webforms_json_input">
+      <button id="webforms_load_json_button">Cargar JSON</button>
+    </section>
+    <div id="webforms_wizard">
+        <form id="webforms_main_form"></form>
+    </div>
+    
+    <hr>
+    <section id="webforms_send_section">
+      <input type="submit" id="webforms_send" value="Aceptar y firmar" form="webforms_main_form">
+    </section>
+    <div id="webforms_page_number" class="page-number"></div>
+    <div class="toast" id="webforms_toast">
+      <div class="toast-content">
+      </div>
   </div>
-</div>
-<script type="module">
-      export class Wizard {
-        constructor(form) {
-          this.steps = document.querySelectorAll(".step");
-          this.currentStep = 0;
-          this.form = form;
-          this.showStep(this.currentStep);
-          this.printPaginator();
-          document.querySelector(".next").addEventListener("click", this.onNextClick.bind(this));
-          document.querySelector(".prev").addEventListener("click", this.onPrevClick.bind(this));
-        }
-        onNextClick() {
-          const currentPage = document.getElementById("webforms_current_page");
-          if (this.currentStep < this.steps.length - 1 && this.form.reportValidity()) {
+    <div class="modal">
+
+      <div class="modal-content">
+        <div class="loader"></div>
+      </div>
+    </div>
+
+    
+   
+  <script type="module">export class Wizard {
+    constructor(form) {
+        this.steps = document.querySelectorAll(".step");
+        this.currentStep = 0;
+        this.form = form;
+        this.showStep(this.currentStep);
+        this.printPaginator();
+        document
+            .querySelector(".next")
+            .addEventListener("click", this.onNextClick.bind(this));
+        document
+            .querySelector(".prev")
+            .addEventListener("click", this.onPrevClick.bind(this));
+    }
+    onNextClick() {
+        const currentPage = document.getElementById("webforms_current_page");
+        if (this.currentStep < this.steps.length - 1 &&
+            this.form.reportValidity()) {
             this.currentStep++;
             if (currentPage) {
-              currentPage.innerHTML = (this.currentStep + 1).toString();
+                currentPage.innerHTML = (this.currentStep + 1).toString();
             }
             this.showStep(this.currentStep);
-          }
         }
-        onPrevClick() {
-          const currentPage = document.getElementById("webforms_current_page");
-          if (this.currentStep > 0) {
+    }
+    onPrevClick() {
+        const currentPage = document.getElementById("webforms_current_page");
+        if (this.currentStep > 0) {
             this.currentStep--;
             if (currentPage) {
-              currentPage.innerHTML = (this.currentStep + 1).toString();
+                currentPage.innerHTML = (this.currentStep + 1).toString();
             }
             this.showStep(this.currentStep);
-          }
         }
-        showStep(step) {
-          this.steps.forEach((s, index) => {
+    }
+    showStep(step) {
+        this.steps.forEach((s, index) => {
             const isCurrentStep = index === step;
             s.style.display = isCurrentStep ? "block" : "none";
             window.scrollTo({
-              top: 0,
+                top: 0,
             });
             this.setInputDisabled(s, !isCurrentStep);
-          });
-        }
-        setInputDisabled(step, disabled) {
-          const inputs = step.querySelectorAll("input[required]");
-          inputs.forEach((input) => {
+        });
+    }
+    setInputDisabled(step, disabled) {
+        const inputs = step.querySelectorAll("input[required]");
+        inputs.forEach((input) => {
             input.disabled = disabled;
-          });
-        }
-        printPaginator() {
-          const container = document.getElementById("webforms_page_number");
-          const currentPage = document.createElement("span");
-          const separator = document.createElement("span");
-          const totalPages = document.createElement("span");
-          currentPage.setAttribute("class", "current-page");
-          currentPage.setAttribute("id", "webforms_current_page");
-          separator.setAttribute("class", "separator");
-          totalPages.setAttribute("class", "total-pages");
-          currentPage.innerHTML = (this.currentStep + 1).toString();
-          separator.innerHTML = "/";
-          totalPages.innerHTML = this.steps.length.toString();
-          if (container) {
+        });
+    }
+    printPaginator() {
+        const container = document.getElementById("webforms_page_number");
+        const currentPage = document.createElement("span");
+        const separator = document.createElement("span");
+        const totalPages = document.createElement("span");
+        currentPage.setAttribute("class", "current-page");
+        currentPage.setAttribute("id", "webforms_current_page");
+        separator.setAttribute("class", "separator");
+        totalPages.setAttribute("class", "total-pages");
+        currentPage.innerHTML = (this.currentStep + 1).toString();
+        separator.innerHTML = "/";
+        totalPages.innerHTML = this.steps.length.toString();
+        if (container) {
             container.appendChild(currentPage);
             container.appendChild(separator);
             container.appendChild(totalPages);
-          }
         }
-        isLastPage() {
-          return this.currentStep === this.steps.length - 1;
-        }
-        isFirstPage() {
-          return this.currentStep === 0;
-        }
-        stepIsValid() {
-          return this.form.reportValidity();
-        }
-        getFormSteps() {
-          return this.steps.length;
-        }
-      }
-      export default class JsonForms {
-        constructor() {
-          this.globalJson = {};
-        }
-        init(json = null, callback) {
-          this.callback = callback;
-          this.json = json;
-          const loadJsonSection = document.getElementById("webforms_load_json_section");
-          this.loadJsonButton = document.getElementById("webforms_load_json_button");
-          this.toJson = document.getElementById("webforms_send");
-          this.formContainer = document.getElementById("webforms_main_form");
-          if (json) {
+    }
+    isLastPage() {
+        return this.currentStep === this.steps.length - 1;
+    }
+    isFirstPage() {
+        return this.currentStep === 0;
+    }
+    stepIsValid() {
+        return this.form.reportValidity();
+    }
+    getFormSteps() {
+        return this.steps.length;
+    }
+}
+// Define las interfaces
+export default class JsonForms {
+    constructor() {
+        this.globalJson = {};
+    }
+    init(json = null, callback) {
+        this.callback = callback;
+        this.json = json;
+        const loadJsonSection = document.getElementById("webforms_load_json_section");
+        this.loadJsonButton = document.getElementById("webforms_load_json_button");
+        this.toJson = document.getElementById("webforms_send");
+        this.formContainer = document.getElementById("webforms_main_form");
+        if (json) {
             document.body.classList.add("loading");
-            this.loadJsonData(json);
-          } else {
+            let jsonData;
+            if (json.document?.form) {
+                jsonData = json.document.form;
+            }
+            else {
+                jsonData = json;
+            }
+            this.loadJsonData(jsonData);
+        }
+        else {
             loadJsonSection.style.display = "flex";
-          }
-          this.loadJsonButton.addEventListener("click", this.handleJsonSection.bind(this));
-          this.toJson.addEventListener("click", this.converToPDF.bind(this));
         }
-        // Función para renderizar el formulario a partir de los datos JSON
-        //Se ha decidido usar un sistema de elementos personalizados, y no un subtype directamente en el json.
-        //Se le añade a nivel de codigo ese subtype para hacer la lógica.
-        renderForm(page, form) {
-          page.items.forEach((item) => {
+        this.loadJsonButton.addEventListener("click", this.handleJsonSection.bind(this));
+        this.toJson.addEventListener("click", this.converToPDF.bind(this));
+    }
+    // Función para renderizar el formulario a partir de los datos JSON
+    //Se ha decidido usar un sistema de elementos personalizados, y no un subtype directamente en el json.
+    //Se le añade a nivel de codigo ese subtype para hacer la lógica.
+    renderForm(page, form) {
+        page.items.forEach((item) => {
             switch (item.type) {
-              //image
-              case "image":
-                if (item.src) {
-                  this.renderImageElement(item, form);
-                }
-                break;
+                //image
+                case "image":
+                    if (item.src) {
+                        this.renderImageElement(item, form);
+                    }
+                    break;
                 //text
-              case "headerText":
-                item.subType = "h1";
-                this.renderTextElement(item, form);
-                break;
-              case "paragraphText":
-                item.subType = "p";
-                this.renderTextElement(item, form);
-                break;
-              case "continuousText":
-                item.subType = "span";
-                this.renderTextElement(item, form);
-                break;
+                case "headerText":
+                    item.subType = "h1";
+                    this.renderTextElement(item, form);
+                    break;
+                case "paragraphText":
+                    item.subType = "p";
+                    this.renderTextElement(item, form);
+                    break;
+                case "continuousText":
+                    item.subType = "span";
+                    this.renderTextElement(item, form);
+                    break;
                 //inputs
-              case "textField":
-                item.subType = "text";
-                this.renderTextInput(item, form);
-                break;
-              case "numberField":
-                item.subType = "number";
-                this.renderTextInput(item, form);
-                break;
-              case "radioButton":
-                item.subType = "radio";
-                if (item.options) {
-                  this.renderRadioInput(item, form);
-                }
-                break;
-              case "dateField":
-                item.subType = "date";
-                this.renderTextInput(item, form);
-                break;
-              case "emailField":
-                item.subType = "email";
-                this.renderTextInput(item, form);
-                break;
+                case "textField":
+                    item.subType = "text";
+                    this.renderTextInput(item, form);
+                    break;
+                case "numberField":
+                    item.subType = "number";
+                    this.renderTextInput(item, form);
+                    break;
+                case "radioButton":
+                    item.subType = "radio";
+                    if (item.options) {
+                        this.renderRadioInput(item, form);
+                    }
+                    break;
+                case "dateField":
+                    item.subType = "date";
+                    this.renderTextInput(item, form);
+                    break;
+                case "emailField":
+                    item.subType = "email";
+                    this.renderTextInput(item, form);
+                    break;
                 //table
-              case "table":
-                item.subType = "table";
-                this.renderTable(item, form);
-                break;
+                case "table":
+                    item.subType = "table";
+                    this.renderTable(item, form);
+                    break;
                 //dividers
-              case "pageBreak":
-                item.subType = "div";
-                this.renderDivider(item, form);
-                break;
-              case "barBreak":
-                item.subType = "hr";
-                this.renderDivider(item, form);
-                break;
-              case "lineBreak":
-                item.subType = "br";
-                this.renderDivider(item, form);
-                break;
-              default:
-                break;
+                case "pageBreak":
+                    item.subType = "div";
+                    this.renderDivider(item, form);
+                    break;
+                case "barBreak":
+                    item.subType = "hr";
+                    this.renderDivider(item, form);
+                    break;
+                case "lineBreak":
+                    item.subType = "br";
+                    this.renderDivider(item, form);
+                    break;
+                default:
+                    break;
             }
-          });
-        }
-        setGeneralStyles(styles) {
-          for (const key in styles) {
+        });
+    }
+    setGeneralStyles(styles) {
+        for (const key in styles) {
             document.getElementById("webforms_wizard").style[key] = styles[key];
-          }
         }
-        // Función para renderizar elementos de entrada tipo radio
-        renderRadioInput(item, form) {
-          const legend = document.createElement("legend");
-          legend.setAttribute("id", item.id + "_legend");
-          form.appendChild(legend);
-          legend.textContent = item.label;
-          this.addCss(item, legend);
-          if (item.visible === false) {
+    }
+    // Función para renderizar elementos de entrada tipo radio
+    renderRadioInput(item, form) {
+        const legend = document.createElement("legend");
+        legend.setAttribute("id", item.id + "_legend");
+        form.appendChild(legend);
+        legend.textContent = item.label;
+        this.addCss(item, legend);
+        if (item.visible === false) {
             legend.style.display = "none";
-          }
-          if (item.options) {
+        }
+        if (item.options) {
             item.options.forEach((option) => {
-              option.customId = Math.floor(Math.random() * 90000) + 10000;
-              const input = this.createInputElement(item, option);
-              const label = this.createLabelElement(item, option);
-              //if position is vertical, options are appended into a div
-              if (item.verticalOptions) {
-                const container = document.createElement("div");
-                container.appendChild(input);
-                container.appendChild(label);
-                form.appendChild(container);
-              } else {
-                form.appendChild(input);
-                form.appendChild(label);
-              }
+                option.customId = Math.floor(Math.random() * 90000) + 10000;
+                const input = this.createInputElement(item, option);
+                const label = this.createLabelElement(item, option);
+                //if position is vertical, options are appended into a div
+                if (item.verticalOptions) {
+                    const container = document.createElement("div");
+                    container.appendChild(input);
+                    container.appendChild(label);
+                    form.appendChild(container);
+                }
+                else {
+                    form.appendChild(input);
+                    form.appendChild(label);
+                }
             });
-          }
         }
-        // Función para renderizar elementos de entrada de texto
-        renderTextInput(item, form) {
-          const input = this.createInputElement(item);
-          const label = this.createLabelElement(item);
-          form.appendChild(label);
-          form.appendChild(input);
-        }
-        // Función para crear elementos de entrada de texto o radio
-        createInputElement(item, value) {
-          const input = document.createElement("input");
-          this.setInputAttributes(item, value, input);
-          this.inputValueChanged(item, input);
-          this.addCss(item, input);
-          return input;
-        }
-        renderDivider(item, form) {
-          const divider = this.createDividerElement(item.subType);
-          if (divider) {
+    }
+    // Función para renderizar elementos de entrada de texto
+    renderTextInput(item, form) {
+        const input = this.createInputElement(item);
+        const label = this.createLabelElement(item);
+        form.appendChild(label);
+        form.appendChild(input);
+    }
+    // Función para crear elementos de entrada de texto o radio
+    createInputElement(item, value) {
+        const input = document.createElement("input");
+        this.setInputAttributes(item, value, input);
+        this.inputValueChanged(item, input);
+        this.addCss(item, input);
+        return input;
+    }
+    renderDivider(item, form) {
+        const divider = this.createDividerElement(item.subType);
+        if (divider) {
             form.appendChild(divider);
-          }
         }
-        createDividerElement(subType) {
-          let divider;
-          divider = document.createElement(subType);
-          if (subType === "div") {
+    }
+    createDividerElement(subType) {
+        let divider;
+        divider = document.createElement(subType);
+        if (subType === "div") {
             divider.style.pageBreakBefore = "always";
-          }
-          return divider;
         }
-        // Función para crear etiquetas de elementos de entrada
-        createLabelElement(item, value) {
-          const label = document.createElement("label");
-          if (item.subType === "radio" && item.options) {
+        return divider;
+    }
+    // Función para crear etiquetas de elementos de entrada
+    createLabelElement(item, value) {
+        const label = document.createElement("label");
+        if (item.subType === "radio" && item.options) {
             label.setAttribute("for", `${item.id}_${value.customId}`);
-          } else {
+        }
+        else {
             label.setAttribute("for", item.id);
-          }
-          if (value) {
+        }
+        if (value) {
             label.textContent = value.value;
-          } else {
+        }
+        else {
             label.textContent = item.label;
-          }
-          if (item.visible === false) {
+        }
+        if (item.visible === false) {
             label.style.display = "none";
-          }
-          this.addCss(item, label);
-          return label;
         }
-        // Función para renderizar elementos de texto
-        renderTextElement(item, form) {
-          const text = document.createElement(item.subType);
-          text.textContent = item.label;
-          if (item.id) {
+        this.addCss(item, label);
+        return label;
+    }
+    // Función para renderizar elementos de texto
+    renderTextElement(item, form) {
+        const text = document.createElement(item.subType);
+        text.textContent = item.label;
+        if (item.id) {
             text.setAttribute("id", item.id);
-          }
-          if (item.css) {
+        }
+        if (item.css) {
             for (const key in item.css) {
-              text.style[key] = item.css[key];
+                text.style[key] = item.css[key];
             }
-          }
-          if (item.visible === false) {
+        }
+        if (item.visible === false) {
             text.style.display = "none";
-          }
-          this.addCss(item, text);
-          form.appendChild(text);
         }
-        // Función para renderizar elementos de imagen
-        renderImageElement(item, form) {
-          const image = document.createElement("img");
-          image.src = item.src;
-          form.appendChild(image);
-          if (item.visible === false) {
+        this.addCss(item, text);
+        form.appendChild(text);
+    }
+    // Función para renderizar elementos de imagen
+    renderImageElement(item, form) {
+        const image = document.createElement("img");
+        image.src = item.src;
+        form.appendChild(image);
+        if (item.visible === false) {
             image.style.display = "none";
-          }
-          this.addCss(item, image);
         }
-        //función para renderizar tablas
-        renderTable(item, form) {
-          const table = this.createTableElement(item);
-          form.appendChild(table);
-        }
-        createTableElement(item) {
-          const table = document.createElement("table");
-          this.createTableHead(item, table);
-          this.createTableData(item, table);
-          this.addCss(item, table);
-          return table;
-        }
-        createTableHead(item, table) {
-          const thRows = item.cells.th;
-          const thRow = table.insertRow();
-          //crea filas de cabecera
-          thRows.forEach((element) => {
+        this.addCss(item, image);
+    }
+    //función para renderizar tablas
+    renderTable(item, form) {
+        const table = this.createTableElement(item);
+        form.appendChild(table);
+    }
+    createTableElement(item) {
+        const table = document.createElement("table");
+        this.createTableHead(item, table);
+        this.createTableData(item, table);
+        this.addCss(item, table);
+        return table;
+    }
+    createTableHead(item, table) {
+        const thRows = item.cells.th;
+        const thRow = table.insertRow();
+        //crea filas de cabecera
+        thRows.forEach((element) => {
             const th = document.createElement("th"); // create th element
             th.innerHTML = element;
             thRow.appendChild(th);
             //addCss(item, cell);
-          });
-        }
-        createTableData(item, table) {
-          const trRows = item.cells.tr;
-          //crea filas de datos
-          trRows.forEach((element) => {
+        });
+    }
+    createTableData(item, table) {
+        const trRows = item.cells.tr;
+        //crea filas de datos
+        trRows.forEach((element) => {
             const row = table.insertRow();
             for (const key in element) {
-              element[key].forEach((element) => {
-                const cell = row.insertCell();
-                cell.innerHTML = element;
-                //addCss(item, cell);
-              });
+                element[key].forEach((element) => {
+                    const cell = row.insertCell();
+                    cell.innerHTML = element;
+                    //addCss(item, cell);
+                });
             }
-          });
-        }
-        //Función para añadir CSS
-        addCss(item, type) {
-          if (item.css) {
+        });
+    }
+    //Función para añadir CSS
+    addCss(item, type) {
+        if (item.css) {
             for (var key in item.css) {
-              type.style[key] = item.css[key];
+                type.style[key] = item.css[key];
             }
-          }
         }
-        //Función para setear todas las propiedades de los inputs
-        setInputAttributes(item, value, input) {
-          input.name = item.id;
-          input.type = item.subType;
-          if (item.subType === "radio" && item.options) {
+    }
+    //Función para setear todas las propiedades de los inputs
+    setInputAttributes(item, value, input) {
+        input.name = item.id;
+        input.type = item.subType;
+        if (item.subType === "radio" && item.options) {
             input.id = `${item.id}_${value.customId}`;
-          } else {
+        }
+        else {
             input.id = item.id;
-          }
-          if (item.value) {
+        }
+        if (item.value) {
             input.setAttribute("value", item.value);
             input.setAttribute("size", input.value.length + "px");
-          } else {
+        }
+        else {
             input.setAttribute("size", 10 + "px");
-          }
-          if (value) {
+        }
+        if (value) {
             input.value = value.value;
-          }
-          if (input.subType === "radio" && value.checked) {
+        }
+        if (item.subType === "radio" && value.checked) {
             input.setAttribute("checked", "checked");
-          }
-          if (item.editable === false) {
+        }
+        if (item.editable === false) {
             input.disabled = true;
-          }
-          if (item.visible === false) {
+        }
+        if (item.visible === false) {
             input.style.display = "none";
-          }
-          if (item.required) {
+        }
+        if (item.required) {
             input.required = true;
-          }
-          if (item.pattern) {
+        }
+        if (item.pattern) {
             input.setAttribute("pattern", item.pattern);
-          }
-          if (item.today) {
+        }
+        if (item.today) {
             let d = new Date();
             let curr_date = ("0" + d.getDate()).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
             let curr_month = ("0" + (d.getMonth() + 1)).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
@@ -531,331 +633,365 @@
             let today = curr_year + "-" + curr_month + "-" + curr_date;
             input.valueAsDate = new Date();
             input.setAttribute("value", today);
-          }
         }
-        //TODO: refactor
-        inputValueChanged(item, input) {
-          let self = this;
-          input.addEventListener("input", function(event) {
+    }
+    //TODO: refactor
+    inputValueChanged(item, input) {
+        let self = this;
+        input.addEventListener("input", function (event) {
             if (input.type === "radio") {
-              const radioButtons = document.querySelectorAll(`input[type="radio"][name=${input.name}]`);
-              radioButtons.forEach((radioButton) => {
-                radioButton.removeAttribute("checked");
-              });
-              input.setAttribute("checked", "checked");
-              if (item.actions) {
-                item.actions.forEach((actions) => {
-                  const element = document.getElementById(actions.relatedId);
-                  if (element != null) {
-                    self.textActions(actions, input);
-                  } else {
-                    self.radioButtonActions(actions, input);
-                  }
+                const radioButtons = document.querySelectorAll(`input[type="radio"][name=${input.name}]`);
+                radioButtons.forEach((radioButton) => {
+                    radioButton.removeAttribute("checked");
                 });
-              }
-            } else {
-              const newVal = event.target.value;
-              input.setAttribute("value", newVal);
-              if (input.value.length > input.size && input.value.length > 10) {
-                input.setAttribute("size", input.value.length + "px");
-              } else {
-                if (input.value.length === 0) {
-                  input.setAttribute("size", 10 + "px");
-                } else {
-                  if (input.value.length >= 10) {
+                input.setAttribute("checked", "checked");
+                if (item.actions) {
+                    item.actions.forEach((actions) => {
+                        const element = document.getElementById(actions.relatedId);
+                        if (element != null) {
+                            self.textActions(actions, input);
+                        }
+                        else {
+                            self.radioButtonActions(actions, input);
+                        }
+                    });
+                }
+            }
+            else {
+                const newVal = event.target.value;
+                input.setAttribute("value", newVal);
+                if (input.value.length > input.size && input.value.length > 10) {
                     input.setAttribute("size", input.value.length + "px");
-                  }
                 }
-              }
+                else {
+                    if (input.value.length === 0) {
+                        input.setAttribute("size", 10 + "px");
+                    }
+                    else {
+                        if (input.value.length >= 10) {
+                            input.setAttribute("size", input.value.length + "px");
+                        }
+                    }
+                }
             }
-          });
-        }
-        textActions(actions, input) {
-          const label = document.querySelector(`label[for*=${actions.relatedId}]`);
-          const element = document.getElementById(actions.relatedId);
-          if (actions.value === input.value) {
+        });
+    }
+    textActions(actions, input) {
+        const label = document.querySelector(`label[for*=${actions.relatedId}]`);
+        const element = document.getElementById(actions.relatedId);
+        if (actions.value === input.value) {
             if (actions.visible) {
-              element.style.display = "block";
-              if (label) {
-                label.style.display = "block";
-              }
-              if (actions.required) {
-                element.setAttribute("required", actions.required);
-              }
-            } else {
-              element.style.display = "none";
-              if (label) {
-                label.style.display = "none";
-              }
-              element.required = false;
-            }
-          }
-        }
-        radioButtonActions(actions, input) {
-          const elements = document.getElementsByName(actions.relatedId);
-          const labels = document.querySelectorAll(`label[for*=${actions.relatedId}]`);
-          const legend = document.getElementById(`${actions.relatedId}_legend`);
-          if (actions.value === input.value) {
-            if (actions.visible) {
-              labels.forEach((label) => {
-                label.style.display = "initial";
-              });
-              for (let index = 0; index < elements.length; index++) {
-                const element = elements[index];
-                element.style.display = "initial";
+                element.style.display = "block";
+                if (label) {
+                    label.style.display = "block";
+                }
                 if (actions.required) {
-                  element.setAttribute("required", actions.required);
+                    element.setAttribute("required", actions.required);
                 }
-              }
-              if (legend) {
-                legend.style.display = "block";
-              }
-            } else {
-              labels.forEach((label) => {
-                label.style.display = "initial";
-              });
-              for (let index = 0; index < elements.length; index++) {
-                const element = elements[index];
+            }
+            else {
                 element.style.display = "none";
-                labels.forEach((label) => {
-                  label.style.display = "none";
-                });
-                if (legend) {
-                  legend.style.display = "none";
+                if (label) {
+                    label.style.display = "none";
                 }
                 element.required = false;
-              }
             }
-          } else {
+        }
+    }
+    radioButtonActions(actions, input) {
+        const elements = document.getElementsByName(actions.relatedId);
+        const labels = document.querySelectorAll(`label[for*=${actions.relatedId}]`);
+        const legend = document.getElementById(`${actions.relatedId}_legend`);
+        if (actions.value === input.value) {
+            if (actions.visible) {
+                labels.forEach((label) => {
+                    label.style.display = "initial";
+                });
+                for (let index = 0; index < elements.length; index++) {
+                    const element = elements[index];
+                    element.style.display = "initial";
+                    if (actions.required) {
+                        element.setAttribute("required", actions.required);
+                    }
+                }
+                if (legend) {
+                    legend.style.display = "block";
+                }
+            }
+            else {
+                labels.forEach((label) => {
+                    label.style.display = "initial";
+                });
+                for (let index = 0; index < elements.length; index++) {
+                    const element = elements[index];
+                    element.style.display = "none";
+                    labels.forEach((label) => {
+                        label.style.display = "none";
+                    });
+                    if (legend) {
+                        legend.style.display = "none";
+                    }
+                    element.required = false;
+                }
+            }
+        }
+        else {
             //remove radios checked if hide actions again
             const radioButtons = document.querySelectorAll(`input[type="radio"][name=${actions.relatedId}]`);
             radioButtons.forEach((radioButton) => {
-              radioButton.checked = false;
+                radioButton.checked = false;
             });
-          }
         }
-        changeStylesBeforePDF() {
-          const dateInputs = document.querySelectorAll('input[type="date"]');
-          const stepElements = document.querySelectorAll("div.step");
-          // Quitar el borde de los inputs
-          document.querySelectorAll("input").forEach((input) => {
+    }
+    changeStylesBeforePDF() {
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        const stepElements = document.querySelectorAll("div.step");
+        // Quitar el borde de los inputs
+        document.querySelectorAll("input").forEach((input) => {
             input.style.border = "none";
             input.style.backgroundColor = "white";
-          });
-          // Itera a través de los elementos y establece el atributo "readonly" en cada uno para quitar el icono del picker
-          dateInputs.forEach(function(input) {
+        });
+        // Itera a través de los elementos y establece el atributo "readonly" en cada uno para quitar el icono del picker
+        dateInputs.forEach(function (input) {
             input.setAttribute("readonly", "true");
-          });
-          stepElements.forEach(function(step) {
+        });
+        stepElements.forEach(function (step) {
             step.style.display = "block";
-          });
-        }
-        startWizard() {
-          let self = this;
-          const sendJsonSection = document.getElementById("webforms_send_section");
-          const nextButton = document.createElement("button");
-          const prevButton = document.createElement("button");
-          nextButton.setAttribute("class", "next");
-          prevButton.setAttribute("class", "prev");
-          nextButton.innerHTML = "Siguiente";
-          prevButton.innerHTML = "Atrás";
-          prevButton.style.display = "none";
-          nextButton.style.display = "none";
-          self.toJson.style.display = "none";
-          sendJsonSection.insertBefore(nextButton, sendJsonSection.firstChild);
-          sendJsonSection.insertBefore(prevButton, sendJsonSection.firstChild);
-          //TODO: CREAR CLASE INSTANCIA WIZARD
-          const wizard = new Wizard(this.formContainer);
-          if (wizard.getFormSteps() > 1) {
+        });
+    }
+    startWizard() {
+        let self = this;
+        const sendJsonSection = document.getElementById("webforms_send_section");
+        const nextButton = document.createElement("button");
+        const prevButton = document.createElement("button");
+        nextButton.setAttribute("class", "next");
+        prevButton.setAttribute("class", "prev");
+        nextButton.innerHTML = "Siguiente";
+        prevButton.innerHTML = "Atrás";
+        prevButton.style.display = "none";
+        nextButton.style.display = "none";
+        self.toJson.style.display = "none";
+        sendJsonSection.insertBefore(nextButton, sendJsonSection.firstChild);
+        sendJsonSection.insertBefore(prevButton, sendJsonSection.firstChild);
+        //TODO: CREAR CLASE INSTANCIA WIZARD
+        const wizard = new Wizard(this.formContainer);
+        if (wizard.getFormSteps() > 1) {
             nextButton.style.display = "block";
-          }
-          if (wizard.isLastPage()) {
+        }
+        if (wizard.isLastPage()) {
             self.toJson.style.display = "block";
-          }
-          document.querySelector(".next").addEventListener("click", function() {
+        }
+        document.querySelector(".next").addEventListener("click", function () {
             prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
             nextButton.style.display = wizard.isLastPage() ? "none" : "block";
             if (wizard.isLastPage()) {
-              self.toJson.style.display = "block";
+                self.toJson.style.display = "block";
             }
-          });
-          document.querySelector(".prev").addEventListener("click", function() {
+        });
+        document.querySelector(".prev").addEventListener("click", function () {
             if (wizard.stepIsValid()) {
-              prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
-              nextButton.style.display = "block";
+                prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
+                nextButton.style.display = "block";
             }
             if (!wizard.isLastPage()) {
-              self.toJson.style.display = "none";
+                self.toJson.style.display = "none";
             }
-          });
-        }
-        // Función para generar un nuevo JSON a partir de los valores de los inputs
-        generateJSONFromInputs() {
-          const inputs = document.querySelectorAll("webforms_main_form input");
-          const clonedObject = this.globalJson;
-          const outputJSON = {};
-          clonedObject.pages.forEach((page) => {
+        });
+    }
+    // Función para generar un nuevo JSON a partir de los valores de los inputs
+    generateJSONFromInputs() {
+        const inputs = document.querySelectorAll("#webforms_main_form input");
+        const clonedObject = this.globalJson;
+        const outputJSON = {};
+        clonedObject.pages.forEach((page) => {
             page.items.forEach((item) => {
-              if (item.id) {
-                inputs.forEach((input) => {
-                  if (item.id === input.name && input.type === "radio") {
-                    outputJSON[item.id] = input.checked ? input.value : !this.isRadioGroupChecked(input.name) ? "" : outputJSON[item.id];
-                  }
-                  if (item.id === input.id) {
-                    if (["date", "email", "text", "tel", "password", "number"].includes(input.type)) {
-                      outputJSON[item.id] = this.parseInputValue(input);
-                    }
-                  }
-                });
-              }
+                if (item.id) {
+                    inputs.forEach((input) => {
+                        if (item.id === input.name && input.type === "radio") {
+                            outputJSON[item.id] = input.checked
+                                ? input.value
+                                : !this.isRadioGroupChecked(input.name)
+                                    ? ""
+                                    : outputJSON[item.id];
+                        }
+                        if (item.id === input.id) {
+                            if (["date", "email", "text", "tel", "password", "number"].includes(input.type)) {
+                                outputJSON[item.id] = this.parseInputValue(input);
+                            }
+                        }
+                    });
+                }
             });
-          });
-          this.callback(JSON.stringify({
+        });
+        this.callback(JSON.stringify({
             type: "output",
             json: outputJSON,
             html: this.outerHTMLstructure(),
-          }));
-        }
-        isRadioGroupChecked(groupName) {
-          const radios = document.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
-          return Array.from(radios).some((radio) => radio.checked);
-        }
-        parseInputValue(input) {
-          switch (input.type) {
+        }));
+    }
+    isRadioGroupChecked(groupName) {
+        const radios = document.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
+        return Array.from(radios).some((radio) => radio.checked);
+    }
+    parseInputValue(input) {
+        switch (input.type) {
             case "date":
-              return new Date(input.value);
+                return new Date(input.value);
             case "number":
-              return parseFloat(input.value);
+                return parseFloat(input.value);
             default:
-              return input.value;
-          }
+                return input.value;
         }
-        outerHTMLstructure() {
-          const formHTML = document.getElementById("webforms_wizard").outerHTML;
-          const wrapperHTML = `
-
-				<!DOCTYPE html>
-				<html lang="es">
-					<head>
-						<meta charset="UTF-8">
-						</head>
-						<body>
+    }
+    outerHTMLstructure() {
+        const formHTML = document.getElementById("webforms_wizard").outerHTML;
+        const wrapperHTML = `
+          <!DOCTYPE html>
+          <html lang="es">
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body>
               ${formHTML}
             </body>
-					</html>
+          </html>
     `;
-          return wrapperHTML;
-        }
-        converToPDF() {
-          let self = this;
-          const form = document.getElementById("webforms_main_form");
-          form.addEventListener("submit", function(e) {
+        return wrapperHTML;
+    }
+    converToPDF() {
+        let self = this;
+        const form = document.getElementById("webforms_main_form");
+        form.addEventListener("submit", function (e) {
             e.preventDefault();
             if (form.checkValidity()) {
-              self.changeStylesBeforePDF();
-              self.generateJSONFromInputs();
-              if (self.json) return;
-              const pageHTML = document.getElementById("webforms_wizard").outerHTML;
-              const blob = new Blob([pageHTML], {
-                type: "text/html"
-              });
-              const formData = new FormData();
-              formData.append("file", blob);
-              document.body.classList.add("loading");
-              fetch("https://formshtml2pdf.ecosignature.biz/HTML2PDF", {
-                method: "POST",
-                body: formData,
-              }).then((response) => response.blob()).then((blob) => {
-                self.callback({
-                  type: "success",
-                  value: blob
+                self.changeStylesBeforePDF();
+                self.generateJSONFromInputs();
+                if (self.json)
+                    return;
+                const pageHTML = document.getElementById("webforms_wizard").outerHTML;
+                const blob = new Blob([pageHTML], { type: "text/html" });
+                const formData = new FormData();
+                formData.append("file", blob);
+                document.body.classList.add("loading");
+                fetch("https://formshtml2pdf.ecosignature.biz/HTML2PDF", {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then((response) => response.blob())
+                    .then((blob) => {
+                    self.callback({ type: "success", value: blob });
+                })
+                    .catch((error) => {
+                    self.callback(JSON.stringify({
+                        type: "error",
+                        value: error,
+                    }));
+                })
+                    .finally(() => {
+                    document.body.classList.remove("loading");
                 });
-              }).catch((error) => {
-                self.callback(JSON.stringify({
-                  type: "error",
-                  value: error,
-                }));
-              }).finally(() => {
-                document.body.classList.remove("loading");
-              });
             }
-          });
-        }
-        loadJsonData(jsonData) {
-
-          const loadJsonSection = document.getElementById("webforms_load_json_section");
-          const sendJsonSection = document.getElementById("webforms_send_section");
-          this.globalJson = jsonData;
-          loadJsonSection.style.display = "none";
-          this.setGeneralStyles(jsonData.generalStyles);
-          try {
+        });
+    }
+    loadJsonData(jsonData) {
+        const loadJsonSection = document.getElementById("webforms_load_json_section");
+        const sendJsonSection = document.getElementById("webforms_send_section");
+        this.setGeneralStyles(jsonData.generalStyles);
+        this.globalJson = jsonData;
+        loadJsonSection.style.display = "none";
+        try {
             jsonData.pages.forEach((element, i) => {
-              const stepContainer = document.createElement("div");
-              sendJsonSection.style.display = "flex";
-              stepContainer.setAttribute("class", "step");
-              this.formContainer.appendChild(stepContainer);
-              this.renderForm(element, stepContainer);
+                const stepContainer = document.createElement("div");
+                sendJsonSection.style.display = "flex";
+                stepContainer.setAttribute("class", "step");
+                this.formContainer.appendChild(stepContainer);
+                this.renderForm(element, stepContainer);
             });
             this.startWizard();
-          } catch (error) {
+        }
+        catch (error) {
             console.log(error);
             this.callback(JSON.stringify({
-              type: "error",
-              value: "Es posible que falten elementos en el archivo JSON",
+                type: "error",
+                value: "Es posible que falten elementos en el archivo JSON",
             }));
-          } finally {
-            document.body.classList.remove("loading");
-          }
         }
-        handleJsonSection() {
-          document.body.classList.add("loading");
-          const fileInput = document.getElementById("webforms_json_input");
-          const file = fileInput.files[0];
-          const toast = document.getElementById("webforms_toast");
-          let self = this;
-          if (file) {
+        finally {
+            document.body.classList.remove("loading");
+        }
+    }
+    handleJsonSection() {
+        document.body.classList.add("loading");
+        const fileInput = document.getElementById("webforms_json_input");
+        const file = fileInput.files[0];
+        const toast = document.getElementById("webforms_toast");
+        let self = this;
+        if (file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
-              const jsonContent = event.target.result;
-              try {
-                const jsonData = JSON.parse(jsonContent);
-                self.loadJsonData(jsonData);
-                self.setGeneralStyles(jsonData.generalStyles);
-              } catch (error) {
-                console.error("Error al cargar el archivo JSON: ", error);
-                self.callback(JSON.stringify({
-                  type: "error",
-                  value: "Error al cargar el archivo JSON ",
-                }));
-                toast.classList.add("show");
-                toast.innerHTML = "Es posible que falten elementos en el archivo JSON";
-              } finally {
-                document.body.classList.remove("loading");
-              }
+            reader.onload = function (event) {
+                const jsonContent = event.target.result;
+                try {
+                    const jsonData = JSON.parse(jsonContent);
+                    let json;
+                    if (jsonData.document?.form) {
+                        json = jsonData.document.form;
+                    }
+                    else {
+                        json = jsonData;
+                    }
+                    self.loadJsonData(json);
+                    self.setGeneralStyles(json.generalStyles);
+                }
+                catch (error) {
+                    console.error("Error al cargar el archivo JSON: ", error);
+                    self.callback(JSON.stringify({
+                        type: "error",
+                        value: "Error al cargar el archivo JSON ",
+                    }));
+                    toast.classList.add("show");
+                    toast.innerHTML =
+                        "Es posible que falten elementos en el archivo JSON";
+                }
+                finally {
+                    document.body.classList.remove("loading");
+                }
             };
             reader.readAsText(file);
-            fileInput.value = "";
-          } else {
-            // Realiza una solicitud para cargar el archivo JSON
-            fetch("data.json").then((response) => response.json()).then((data) => {
-              this.loadJsonData(data);
-              this.setGeneralStyles(data.generalStyles);
-              toast.classList.remove("show");
-            }).catch((error) => {
-              console.error("Error al cargar el archivo JSON: ", error);
-              this.callback(JSON.stringify({
-                type: "error",
-                value: "Error al cargar el archivo JSON ",
-              }));
-              toast.classList.add("show");
-              toast.innerHTML = "Es posible que falten elementos en el archivo JSON";
-            }).finally(() => {
-              document.body.classList.remove("loading");
-            });
-          }
+            //fileInput.value = "";
         }
-      }
-      window.jsonForms = new JsonForms();
-    </script>
-</body>
-</html>
+        else {
+            // Realiza una solicitud para cargar el archivo JSON
+            fetch("data.json")
+                .then((response) => response.json())
+                .then((data) => {
+                let json;
+                if (data.document?.form) {
+                    json = data.document.form;
+                }
+                else {
+                    json = data;
+                }
+                this.loadJsonData(json);
+                this.setGeneralStyles(json.generalStyles);
+                toast.classList.remove("show");
+            })
+                .catch((error) => {
+                console.error("Error al cargar el archivo JSON: ", error);
+                this.callback(JSON.stringify({
+                    type: "error",
+                    value: "Error al cargar el archivo JSON ",
+                }));
+                toast.classList.add("show");
+                toast.innerHTML =
+                    "Es posible que falten elementos en el archivo JSON";
+            })
+                .finally(() => {
+                document.body.classList.remove("loading");
+            });
+        }
+    }
+}
+
+window.jsonForms = new JsonForms();</script>
+
+</body></html>

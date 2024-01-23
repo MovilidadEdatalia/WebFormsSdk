@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
 fun WebFormsDemoScreen() {
 
     val context = LocalContext.current
-    val jsonFileUri: MutableState<Uri?> = remember { mutableStateOf(null) }
     val openAlertDialog = remember { mutableStateOf(false) }
     var alertDialogMessage by remember { mutableStateOf("") }
 
@@ -81,7 +80,7 @@ fun WebFormsDemoScreen() {
         }
     )
 
-    val getJsonDocument = rememberLauncherForActivityResult(
+    val getWebFormDocument = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { result ->
             getTransformedDocument.launch(result.toString())
@@ -99,7 +98,7 @@ fun WebFormsDemoScreen() {
         Button(
             modifier = Modifier.padding(),
             onClick = {
-                getJsonDocument.launch(arrayOf("application/octet-stream", "application/json"))
+                getWebFormDocument.launch(arrayOf("application/octet-stream"))
             }) {
             Text("Seleccionar configuración")
         }
