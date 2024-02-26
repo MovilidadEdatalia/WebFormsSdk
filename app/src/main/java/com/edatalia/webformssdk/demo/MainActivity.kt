@@ -100,7 +100,7 @@ fun WebFormsDemoScreen() {
             onClick = {
                 getWebFormDocument.launch(arrayOf("application/octet-stream"))
             }) {
-            Text("Seleccionar configuración")
+            Text("Seleccionar configuración (.webform)")
         }
 
 

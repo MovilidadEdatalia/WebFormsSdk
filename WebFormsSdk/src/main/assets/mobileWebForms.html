@@ -3,226 +3,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Document</title>
-  <style>button,input[type="submit"] {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-button,input[type="submit"] {
-  background-color: #3498db; /* Background color when normal */
-  color: #ffffff; /* Text color when normal */
-}
-button:hover,input[type="submit"] {
-  background-color: #2980b9; /* Background color on hover */
-  color: #ffffff; /* Text color on hover */
-}
-#webforms_send_section,#webforms_load_json_section{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
+  <style>
+#webforms_send_section , #webforms_load_json_section{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2rem;
 
 }
 #webforms_load_json_section{
- flex-direction: column;
+flex-direction: column;
 }
 #webforms_send_section{
-  flex-direction: row;
-  display: none;
+flex-direction: row;
+margin-bottom: 3rem !important;
+display: none;
+padding: 2rem !important;
 }
-#webforms_load_json_section > input,button{
-  margin: 1rem;
+
+#webforms_send_section > input, #webforms_send_section > button, #webforms_load_json_section > button {
+background-color: #00a4d7 ;
+height: 2.9rem;
+width: 12rem;
+border-radius: 3px;
+padding: 0.6rem 1rem;
+text-align: center;
+color: white;
+outline: none;
+cursor: pointer;
+border: none;
+text-transform: uppercase;
+font-weight: 400 !important;
+font-family: exo-semibold, sans-serif !important
+}
+
+#webforms_send_section > input:hover, #webforms_send_section > button:hover {
+background-color: #0081a9;
+
+}
+#webforms_load_json_section > input, #webforms_load_json_section > button{
+margin: 1rem;
+}
+#webforms_attachments_button, #webforms_cancel_button {
+background-color: #ffffff !important;
+border: 1px solid #00a4d7 !important;
+color: #00a4d7 !important;
+}
+#webforms_attachments_button:hover, #webforms_cancel_button:hover {
+background-color: #00a4d7 !important;
+color: white !important;
 }
 .modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(165, 165, 165, 0.7);
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(165, 165, 165, 0.7);
 }
 .modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
 }
 
 .loader {
-  border: 4px solid #3498db; /* Color azul */
-  border-top: 4px solid transparent;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
+border: 4px solid #3498db; /* Color azul */
+border-top: 4px solid transparent;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+animation: spin 1s linear infinite;
 }
 
 body.loading {
-  overflow: hidden;
+overflow: hidden;
 }
 body.loading .modal {
-  display: block;
+display: block;
 }
 .toast {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  font-weight: bold;
-  background: #fdfd82;
-  color: rgb(51, 51, 51);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  z-index: 999;
+display: none;
+position: fixed;
+bottom: 20px;
+left: 20px;
+font-weight: bold;
+background: #fdfd82;
+color: rgb(51, 51, 51);
+padding: 10px;
+border-radius: 5px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+z-index: 999;
 }
 .toast.show {
-  display: block;
+display: block;
 }
 .step {
-  display: none;
+display: none;
 }
 .page-number {
-  display: flex;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #2980b9;
+display: flex;
+justify-content: center;
+font-size: 1rem;
+font-weight: bold;
+color: #2980b9;
 }
 
 .current-page {
-  margin-right: 5px;
+margin-right: 5px;
 }
 
 .separator {
-  margin: 0 5px;
+margin: 0 5px;
 }
 
 .total-pages {
-  margin-left: 5px;
+margin-left: 5px;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}</style><style>button,input[type="submit"] {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
 }
-button,input[type="submit"] {
-  background-color: #3498db; /* Background color when normal */
-  color: #ffffff; /* Text color when normal */
+@media (max-width: 720px) {
+#webforms_send_section  {
+  flex-direction: column;
 }
-button:hover,input[type="submit"] {
-  background-color: #2980b9; /* Background color on hover */
-  color: #ffffff; /* Text color on hover */
-}
-#webforms_send_section,#webforms_load_json_section{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
-
-}
-#webforms_load_json_section{
- flex-direction: column;
-}
-#webforms_send_section{
-  flex-direction: row;
-  display: none;
-}
-#webforms_load_json_section > input,button{
-  margin: 1rem;
-}
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
+#webforms_send_section > button, #webforms_send_section > input{
   width: 100%;
-  height: 100%;
-  background-color: rgba(165, 165, 165, 0.7);
+  margin-bottom: 0.8rem !important;
 }
-.modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.loader {
-  border: 4px solid #3498db; /* Color azul */
-  border-top: 4px solid transparent;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-}
-
-body.loading {
-  overflow: hidden;
-}
-body.loading .modal {
-  display: block;
-}
-.toast {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  font-weight: bold;
-  background: #fdfd82;
-  color: rgb(51, 51, 51);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  z-index: 999;
-}
-.toast.show {
-  display: block;
-}
-.step {
-  display: none;
-}
-.page-number {
-  display: flex;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #2980b9;
-}
-
-.current-page {
-  margin-right: 5px;
-}
-
-.separator {
-  margin: 0 5px;
-}
-
-.total-pages {
-  margin-left: 5px;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }</style></head>
   <body>
     <section id="webforms_load_json_section" style="display: none;">
@@ -235,7 +147,7 @@ body.loading .modal {
     
     <hr>
     <section id="webforms_send_section">
-      <input type="submit" id="webforms_send" value="Aceptar y firmar" form="webforms_main_form">
+      <input type="submit" id="webforms_send" value="Aceptar" form="webforms_main_form">
     </section>
     <div id="webforms_page_number" class="page-number"></div>
     <div class="toast" id="webforms_toast">
@@ -243,13 +155,35 @@ body.loading .modal {
       </div>
   </div>
     <div class="modal">
-
       <div class="modal-content">
         <div class="loader"></div>
       </div>
     </div>
 
-  <script>class Wizard {
+    
+   
+  <script>class EventEmitter {
+    constructor() {
+        this.events = {};
+    }
+    on(eventName, callback) {
+        if (!this.events[eventName]) {
+            this.events[eventName] = [];
+        }
+        this.events[eventName].push(callback);
+    }
+    emit(eventName, ...args) {
+        const callbacks = this.events[eventName];
+        if (callbacks) {
+            callbacks.forEach(callback => {
+                callback(...args);
+            });
+        }
+    }
+}
+
+
+class Wizard {
     constructor(form) {
         this.steps = document.querySelectorAll(".step");
         this.currentStep = 0;
@@ -262,11 +196,23 @@ body.loading .modal {
         document
             .querySelector(".prev")
             .addEventListener("click", this.onPrevClick.bind(this));
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (form.checkValidity() && this.customValidations(form, null, null)) {
+                Wizard.emitter.emit('validForm');
+            }
+        });
+        form.addEventListener('input', (event) => {
+            const target = event.target;
+            if (target.tagName === 'INPUT') {
+                this.customValidations(form, null, target);
+            }
+        });
     }
     onNextClick() {
         const currentPage = document.getElementById("webforms_current_page");
         if (this.currentStep < this.steps.length - 1 &&
-            this.form.reportValidity()) {
+            this.form.reportValidity() && this.customValidations(this.form, parseInt(currentPage.innerText), null)) {
             this.currentStep++;
             if (currentPage) {
                 currentPage.innerHTML = (this.currentStep + 1).toString();
@@ -330,39 +276,79 @@ body.loading .modal {
     getFormSteps() {
         return this.steps.length;
     }
+    customValidations(form, page, selectedInput) {
+        let inputs;
+        // Obtener los inputs según la página o el formulario completo
+        if (page !== null) {
+            inputs = form.children[page - 1].querySelectorAll("input");
+        }
+        else {
+            inputs = form.querySelectorAll('input');
+        }
+        let isValid = true; // Variable de control para la validación
+        // Función para validar un input específico
+        const validateInput = (input) => {
+            if (input.dataset.rules === "NIFNIE") {
+                const inputIsValid = validateNIFNIE(input.value);
+                if (!inputIsValid) {
+                    input.style.borderColor = "#EF424D";
+                    // Hacer scroll hacia el input inválido
+                    input.scrollIntoView({ behavior: "smooth", block: "center" });
+                    isValid = false;
+                }
+                else {
+                    input.style.borderColor = "#00cd00";
+                }
+            }
+        };
+        // Validar formulario completo o un input específico
+        if (selectedInput === null) {
+            inputs.forEach(input => {
+                validateInput(input);
+            });
+        }
+        else {
+            validateInput(selectedInput);
+        }
+        return isValid;
+    }
 }
+Wizard.emitter = new EventEmitter();
 // Define las interfaces
-class JsonForms {
+
+class WebForms {
     constructor() {
         this.globalJson = {};
     }
-    init(json = null, callback) {
+    init(container = null, json = null, callback) {
         this.callback = callback;
-        this.json = json;
-        const loadJsonSection = document.getElementById("webforms_load_json_section");
-        this.loadJsonButton = document.getElementById("webforms_load_json_button");
+        this.container = container;
+        let jsonData = null;
+        if (this.container) {
+            this.createDivContainers();
+        }
         this.toJson = document.getElementById("webforms_send");
         this.formContainer = document.getElementById("webforms_main_form");
-        if (json) {
-            document.body.classList.add("loading");
-            let jsonData;
-            if (json.document && json.document.form) {
-                jsonData = json.document.form;
-            }
-            else {
-                jsonData = json;
-            }
-            this.loadJsonData(jsonData);
+        document.body.classList.add("loading");
+        // Si viene el campo document informado creamos la estructura conveniente
+        if (json.document && json.document.form) {
+            jsonData = json.document.form;
         }
         else {
-            loadJsonSection.style.display = "flex";
+            jsonData = json;
         }
-        this.loadJsonButton.addEventListener("click", this.handleJsonSection.bind(this));
-        this.toJson.addEventListener("click", this.converToPDF.bind(this));
+        this.loadJsonData(jsonData);
+        if (json.document && json.document.formValues) {
+            this.setFormValues(json.document.formValues);
+        }
+        Wizard.emitter.on("validForm", () => {
+            this.changeStylesBeforePDF();
+            this.generateJSONFromInputs();
+        });
     }
     // Función para renderizar el formulario a partir de los datos JSON
-    //Se ha decidido usar un sistema de elementos personalizados, y no un subtype directamente en el json.
-    //Se le añade a nivel de codigo ese subtype para hacer la lógica.
+    // Se ha decidido usar un sistema de elementos personalizados, y no un subtype directamente en el json.
+    // Se le añade a nivel de codigo ese subtype para hacer la lógica.
     renderForm(page, form) {
         page.items.forEach((item) => {
             switch (item.type) {
@@ -522,10 +508,11 @@ class JsonForms {
         if (item.id) {
             text.setAttribute("id", item.id);
         }
+        //[modificada para typescript]
         if (item.css) {
-            for (const key in item.css) {
-                text.style[key] = item.css[key];
-            }
+            Object.entries(item.css).forEach(([key, value]) => {
+                text.style.setProperty(key, value);
+            });
         }
         if (item.visible === false) {
             text.style.display = "none";
@@ -536,7 +523,10 @@ class JsonForms {
     // Función para renderizar elementos de imagen
     renderImageElement(item, form) {
         const image = document.createElement("img");
-        image.src = item.src;
+        if (item.src) {
+            // Verificar si item.src tiene un valor
+            image.src = item.src;
+        }
         form.appendChild(image);
         if (item.visible === false) {
             image.style.display = "none";
@@ -580,13 +570,25 @@ class JsonForms {
             }
         });
     }
-    //Función para añadir CSS
+    // Función para añadir CSS
     addCss(item, type) {
         if (item.css) {
-            for (var key in item.css) {
-                type.style[key] = item.css[key];
+            for (const cssKey in item.css) {
+                const normalizedCssKey = this.normalizeCssProperty(cssKey);
+                const cssValue = item.css[cssKey];
+                type.style.setProperty(this.toDashCase(normalizedCssKey), cssValue);
             }
         }
+    }
+    toDashCase(propertyName) {
+        return propertyName.replace(/[A-Z]/g, function (match) {
+            return "-" + match.toLowerCase();
+        });
+    }
+    normalizeCssProperty(propertyName) {
+        return propertyName.replace(/-([a-z])/g, function (_, letter) {
+            return letter.toUpperCase();
+        });
     }
     //Función para setear todas las propiedades de los inputs
     setInputAttributes(item, value, input) {
@@ -623,20 +625,16 @@ class JsonForms {
         if (item.pattern) {
             input.setAttribute("pattern", item.pattern);
         }
+        if (item.rules) {
+            input.dataset.rules = "NIFNIE";
+        }
         if (item.today) {
-            let d = new Date();
-            let curr_date = ("0" + d.getDate()).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
-            let curr_month = ("0" + (d.getMonth() + 1)).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
-            let curr_year = d.getFullYear();
-            let today = curr_year + "-" + curr_month + "-" + curr_date;
-            input.valueAsDate = new Date();
-            input.setAttribute("value", today);
+            input.setAttribute("value", this.formatDateISOToYYYYMMDD());
         }
     }
     //TODO: refactor
     inputValueChanged(item, input) {
-        let self = this;
-        input.addEventListener("input", function (event) {
+        input.addEventListener("input", (event) => {
             if (input.type === "radio") {
                 const radioButtons = document.querySelectorAll(`input[type="radio"][name=${input.name}]`);
                 radioButtons.forEach((radioButton) => {
@@ -647,16 +645,17 @@ class JsonForms {
                     item.actions.forEach((actions) => {
                         const element = document.getElementById(actions.relatedId);
                         if (element != null) {
-                            self.textActions(actions, input);
+                            this.textActions(actions, input);
                         }
                         else {
-                            self.radioButtonActions(actions, input);
+                            this.radioButtonActions(actions, input);
                         }
                     });
                 }
             }
             else {
                 const newVal = event.target.value;
+                this.setInputValueToElement(input.id, newVal);
                 input.setAttribute("value", newVal);
                 if (input.value.length > input.size && input.value.length > 10) {
                     input.setAttribute("size", input.value.length + "px");
@@ -672,6 +671,24 @@ class JsonForms {
                     }
                 }
             }
+        });
+    }
+    /** Busca si hay elementos asociados a un input para reemplazar sus valores */
+    setInputValueToElement(inputId, newValue) {
+        // Buscar en todo el json si hay algun elemento con el atributo getValueOf y si tiene asociado el id del inputId
+        this.globalJson.pages.forEach((page) => {
+            page.items.forEach((element) => {
+                if (element.getValuesOf && element.getValuesOf === inputId) {
+                    const domElement = document.getElementById(element.id); // En caso de que si, cambiarle el valor por newValue
+                    if (domElement instanceof HTMLInputElement) {
+                        // Si es de tipo input
+                        domElement.value = newValue;
+                    }
+                    else {
+                        domElement.innerHTML = newValue;
+                    }
+                }
+            });
         });
     }
     textActions(actions, input) {
@@ -744,8 +761,11 @@ class JsonForms {
     changeStylesBeforePDF() {
         const dateInputs = document.querySelectorAll('input[type="date"]');
         const stepElements = document.querySelectorAll("div.step");
+        const webforms_wizard = document.getElementById("webforms_wizard");
         // Quitar el borde de los inputs
-        document.querySelectorAll("input").forEach((input) => {
+        webforms_wizard
+            .querySelectorAll("input")
+            .forEach((input) => {
             input.style.border = "none";
             input.style.backgroundColor = "white";
         });
@@ -758,7 +778,6 @@ class JsonForms {
         });
     }
     startWizard() {
-        let self = this;
         const sendJsonSection = document.getElementById("webforms_send_section");
         const nextButton = document.createElement("button");
         const prevButton = document.createElement("button");
@@ -768,8 +787,8 @@ class JsonForms {
         prevButton.innerHTML = "Atrás";
         prevButton.style.display = "none";
         nextButton.style.display = "none";
-        self.toJson.style.display = "none";
-        sendJsonSection.insertBefore(nextButton, sendJsonSection.firstChild);
+        this.toJson.style.display = "none";
+        sendJsonSection.insertBefore(nextButton, sendJsonSection.lastChild);
         sendJsonSection.insertBefore(prevButton, sendJsonSection.firstChild);
         //TODO: CREAR CLASE INSTANCIA WIZARD
         const wizard = new Wizard(this.formContainer);
@@ -777,22 +796,22 @@ class JsonForms {
             nextButton.style.display = "block";
         }
         if (wizard.isLastPage()) {
-            self.toJson.style.display = "block";
+            this.toJson.style.display = "block";
         }
-        document.querySelector(".next").addEventListener("click", function () {
+        document.querySelector(".next").addEventListener("click", () => {
             prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
             nextButton.style.display = wizard.isLastPage() ? "none" : "block";
             if (wizard.isLastPage()) {
-                self.toJson.style.display = "block";
+                this.toJson.style.display = "block";
             }
         });
-        document.querySelector(".prev").addEventListener("click", function () {
+        document.querySelector(".prev").addEventListener("click", () => {
             if (wizard.stepIsValid()) {
                 prevButton.style.display = wizard.isFirstPage() ? "none" : "block";
                 nextButton.style.display = "block";
             }
             if (!wizard.isLastPage()) {
-                self.toJson.style.display = "none";
+                this.toJson.style.display = "none";
             }
         });
     }
@@ -800,24 +819,27 @@ class JsonForms {
     generateJSONFromInputs() {
         const inputs = document.querySelectorAll("#webforms_main_form input");
         const clonedObject = this.globalJson;
-        const outputJSON = {};
+        const outputJSON = [];
         clonedObject.pages.forEach((page) => {
             page.items.forEach((item) => {
                 if (item.id) {
+                    const newItem = { id: item.id, value: null };
                     inputs.forEach((input) => {
                         if (item.id === input.name && input.type === "radio") {
-                            outputJSON[item.id] = input.checked
+                            newItem.value = input.checked
                                 ? input.value
                                 : !this.isRadioGroupChecked(input.name)
                                     ? ""
-                                    : outputJSON[item.id];
+                                    : newItem.value;
                         }
-                        if (item.id === input.id) {
-                            if (["date", "email", "text", "tel", "password", "number"].includes(input.type)) {
-                                outputJSON[item.id] = this.parseInputValue(input);
-                            }
+                        if (item.id === input.id &&
+                            ["date", "email", "text", "tel", "password", "number"].includes(input.type)) {
+                            newItem.value = this.parseInputValue(input);
                         }
                     });
+                    if (newItem.value !== null) {
+                        outputJSON.push(newItem);
+                    }
                 }
             });
         });
@@ -834,7 +856,7 @@ class JsonForms {
     parseInputValue(input) {
         switch (input.type) {
             case "date":
-                return new Date(input.value);
+                return this.formatDateToISO(input.value);
             case "number":
                 return parseFloat(input.value);
             default:
@@ -856,49 +878,12 @@ class JsonForms {
     `;
         return wrapperHTML;
     }
-    converToPDF() {
-        let self = this;
-        const form = document.getElementById("webforms_main_form");
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            if (form.checkValidity()) {
-                self.changeStylesBeforePDF();
-                self.generateJSONFromInputs();
-                if (self.json)
-                    return;
-                const pageHTML = document.getElementById("webforms_wizard").outerHTML;
-                const blob = new Blob([pageHTML], { type: "text/html" });
-                const formData = new FormData();
-                formData.append("file", blob);
-                document.body.classList.add("loading");
-                fetch("https://formshtml2pdf.ecosignature.biz/HTML2PDF", {
-                    method: "POST",
-                    body: formData,
-                })
-                    .then((response) => response.blob())
-                    .then((blob) => {
-                    self.callback({ type: "success", value: blob });
-                })
-                    .catch((error) => {
-                    self.callback(JSON.stringify({
-                        type: "error",
-                        value: error,
-                    }));
-                })
-                    .finally(() => {
-                    document.body.classList.remove("loading");
-                });
-            }
-        });
-    }
     loadJsonData(jsonData) {
-        const loadJsonSection = document.getElementById("webforms_load_json_section");
         const sendJsonSection = document.getElementById("webforms_send_section");
         this.setGeneralStyles(jsonData.generalStyles);
         this.globalJson = jsonData;
-        loadJsonSection.style.display = "none";
         try {
-            jsonData.pages.forEach((element, i) => {
+            jsonData.pages.forEach((element) => {
                 const stepContainer = document.createElement("div");
                 sendJsonSection.style.display = "flex";
                 stepContainer.setAttribute("class", "step");
@@ -908,7 +893,6 @@ class JsonForms {
             this.startWizard();
         }
         catch (error) {
-            console.log(error);
             this.callback(JSON.stringify({
                 type: "error",
                 value: "Es posible que falten elementos en el archivo JSON",
@@ -918,78 +902,164 @@ class JsonForms {
             document.body.classList.remove("loading");
         }
     }
-    handleJsonSection() {
-        document.body.classList.add("loading");
-        const fileInput = document.getElementById("webforms_json_input");
-        const file = fileInput.files[0];
-        const toast = document.getElementById("webforms_toast");
-        let self = this;
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const jsonContent = event.target.result;
-                try {
-                    const jsonData = JSON.parse(jsonContent);
-                    let json;
-                    if (jsonData.document.form) {
-                        json = jsonData.document.form;
-                    }
-                    else {
-                        json = jsonData;
-                    }
-                    self.loadJsonData(json);
-                    self.setGeneralStyles(json.generalStyles);
-                }
-                catch (error) {
-                    console.error("Error al cargar el archivo JSON: ", error);
-                    self.callback(JSON.stringify({
-                        type: "error",
-                        value: "Error al cargar el archivo JSON ",
-                    }));
-                    toast.classList.add("show");
-                    toast.innerHTML =
-                        "Es posible que falten elementos en el archivo JSON";
-                }
-                finally {
-                    document.body.classList.remove("loading");
-                }
-            };
-            reader.readAsText(file);
-            //fileInput.value = "";
-        }
-        else {
-            // Realiza una solicitud para cargar el archivo JSON
-            fetch("data.json")
-                .then((response) => response.json())
-                .then((data) => {
-                let json;
-                if (data.document.form) {
-                    json = data.document.form;
-                }
-                else {
-                    json = data;
-                }
-                this.loadJsonData(json);
-                this.setGeneralStyles(json.generalStyles);
-                toast.classList.remove("show");
-            })
-                .catch((error) => {
-                console.error("Error al cargar el archivo JSON: ", error);
-                this.callback(JSON.stringify({
-                    type: "error",
-                    value: "Error al cargar el archivo JSON ",
-                }));
-                toast.classList.add("show");
-                toast.innerHTML =
-                    "Es posible que falten elementos en el archivo JSON";
-            })
-                .finally(() => {
-                document.body.classList.remove("loading");
-            });
+    //dynamics divs,elements only for psc
+    createDivContainers() {
+        // Crear elementos HTML
+        const webforms_wizard = document.createElement("div");
+        const webforms_main_form = document.createElement("form");
+        const webforms_send_section = document.createElement("section");
+        const webforms_send_button = document.createElement("input");
+        const webforms_cancel_button = document.createElement("button");
+        const webforms_attachments_button = document.createElement("button");
+        // Configurar atributos y contenido de los elementos
+        webforms_wizard.setAttribute("id", "webforms_wizard");
+        webforms_main_form.setAttribute("id", "webforms_main_form");
+        webforms_send_section.setAttribute("id", "webforms_send_section");
+        webforms_cancel_button.setAttribute("id", "webforms_cancel_button");
+        webforms_attachments_button.setAttribute("id", "webforms_attachments_button");
+        webforms_send_button.setAttribute("id", "webforms_send");
+        webforms_send_button.setAttribute("type", "submit");
+        webforms_send_button.setAttribute("value", "Aceptar");
+        webforms_cancel_button.innerText = "Rechazar";
+        webforms_attachments_button.innerText = "Adjuntos";
+        webforms_attachments_button.style.display = "none";
+        webforms_send_button.setAttribute("form", "webforms_main_form");
+        // Agregar clases CSS
+        webforms_send_section.classList.add("container-md");
+        webforms_wizard.classList.add("container-md");
+        webforms_cancel_button.classList.add("button--cancel");
+        // Adjuntar elementos al DOM
+        this.container.append(webforms_wizard);
+        webforms_wizard.append(webforms_main_form);
+        this.container.append(webforms_send_section);
+        webforms_send_section.append(webforms_cancel_button);
+        webforms_send_section.append(webforms_attachments_button);
+        webforms_send_section.append(webforms_send_button);
+        // Agregar evento de clic al botón de cancelar
+        webforms_cancel_button.addEventListener("click", () => {
+            // Acceder al callback utilizando el contexto correcto
+            this.callback(JSON.stringify({ type: "cancel" }));
+        });
+    }
+    /** Muestra el elemento*/
+    showButton(button) {
+        if (button === "attachment") {
+            const webforms_attachments_button = document.getElementById("webforms_attachments_button");
+            if (webforms_attachments_button) {
+                webforms_attachments_button.style.display = "inline-block";
+                webforms_attachments_button.addEventListener("click", () => {
+                    // Acceder al callback utilizando el contexto correcto
+                    this.callback(JSON.stringify({ type: "attachments" }));
+                });
+            }
         }
     }
+    /** Habilita el elemento*/
+    enable(button) {
+        if (button === "accept") {
+            const webforms_accept_button = document.getElementById("webforms_send");
+            if (webforms_accept_button) {
+                webforms_accept_button.classList.remove("button-invalid");
+            }
+        }
+    }
+    /** Deshabilita el elemento*/
+    disable(button) {
+        if (button === "accept") {
+            const webforms_accept_button = document.getElementById("webforms_send");
+            if (webforms_accept_button) {
+                webforms_accept_button.classList.add("button-invalid");
+            }
+        }
+    }
+    /** Cierra webforms */
+    close() {
+        const webforms_wizard = document.getElementById("webforms_wizard");
+        const webforms_send_section = document.getElementById("webforms_send_section");
+        if (webforms_wizard) {
+            webforms_wizard.remove();
+        }
+        if (webforms_send_section) {
+            webforms_send_section.remove();
+        }
+    }
+    /** Setear los formValues */
+    setFormValues(formValues) {
+        this.globalJson.pages.forEach((page) => {
+            page.items.forEach((item) => {
+                const matchingObject = formValues.find((obj) => obj.id === item.id);
+                if (matchingObject) {
+                    const element = document.getElementById(item.id);
+                    if (element instanceof HTMLInputElement) {
+                        if (element.type === "date") {
+                            element.setAttribute("value", this.formatDateISOToYYYYMMDD(matchingObject.value));
+                        }
+                        else {
+                            // Si no es de tipo date, asignar el valor del objeto
+                            element.value = matchingObject.value;
+                        }
+                    }
+                    else {
+                        element.innerHTML = matchingObject.value;
+                    }
+                }
+            });
+        });
+    }
+    /** Formatea las fechas */
+    formatDateISOToYYYYMMDD(ISOdate) {
+        // Si no se proporciona ISOdate, usar la fecha actual
+        if (!ISOdate) {
+            ISOdate = new Date().toISOString();
+        }
+        // Convertir la fecha ISO a objeto Date
+        const date = new Date(ISOdate);
+        // Obtener año, mes y día
+        const curr_date = ("0" + date.getDate()).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
+        const curr_month = ("0" + (date.getMonth() + 1)).slice(-2); // Añadir cero delante y obtener los dos últimos dígitos
+        const curr_year = date.getFullYear();
+        // Formatear la fecha en el formato deseado
+        const formatDate = `${curr_year}-${curr_month}-${curr_date}`;
+        return formatDate;
+    }
+    formatDateToISO(dateString) {
+        if (!dateString) {
+            throw new Error("The date cannot be empty");
+        }
+        // Verificar si la fecha sigue el formato (YYYY-MM-DD)
+        const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) {
+            throw new Error("Invalid date format. Expected format is YYYY-MM-DD");
+        }
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const day = parseInt(match[3], 10);
+        const date = new Date(year, month - 1, day);
+        const isoDate = date.toISOString().split("T")[0] + "T00:00:00.000Z";
+        return isoDate;
+    }
+}
+/** Validación de NIF/NIE */
+function validateNIFNIE(value) {
+    if (value.trim() === '')
+        return false;
+    const validChars = 'TRWAGMYFPDXBNJZSQVHLCKET';
+    const nifRexp = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+    const nieRexp = /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]$/i;
+    let str = value.toString().toUpperCase();
+    if (!nifRexp.test(str) && !nieRexp.test(str))
+        return false;
+    const nie = str
+        .replace(/^[X]/, '0')
+        .replace(/^[Y]/, '1')
+        .replace(/^[Z]/, '2');
+    const letter = str.substr(-1);
+    const charIndex = parseInt(nie.substr(0, 8)) % 23;
+    if (validChars.charAt(charIndex) === letter)
+        return true;
+    return false;
 }
 
-window.jsonForms = new JsonForms();</script>
+window.webForms = new WebForms();</script>
 
 </body></html>

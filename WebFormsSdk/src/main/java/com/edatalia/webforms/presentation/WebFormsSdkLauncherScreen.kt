@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.print.HtmlToPdfConverter
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -90,7 +91,7 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
                                 val jsonObject = JSONObject(messageFromCallbackJsonString)
                                 val type = jsonObject.getString("type")
                                 if (type == "output") {
-                                    val json = jsonObject.getJSONObject("json")
+                                    val json = jsonObject.getJSONArray("json")
                                     val html = jsonObject.getString("html")
                                     val converter = HtmlToPdfConverter.instance
                                     val file = File(
@@ -138,7 +139,7 @@ fun WebFormsSdkLauncherScreen(uri: Uri) {
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
                             val jsExpresionToConvert =
-                                "jsonForms.init($jsonFormsString, (result) => { ${Constants.JS_CALLBACK_INTERFACE}.postMessage(result); })"
+                                "webForms.init(null, $jsonFormsString, (result) => { ${Constants.JS_CALLBACK_INTERFACE}.postMessage(result); })"
                             evaluateJavascript(jsExpresionToConvert, null)
                         }
                     }
