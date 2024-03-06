@@ -1,9 +1,11 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Document</title>
-  <style>
+    <style>
 #webforms_send_section , #webforms_load_json_section{
   display: flex;
   justify-content: space-around;
@@ -16,9 +18,11 @@ flex-direction: column;
 }
 #webforms_send_section{
 flex-direction: row;
-margin-bottom: 3rem !important;
+margin-bottom: 2rem !important;
 display: none;
-padding: 2rem !important;
+padding-left: 2rem !important;
+padding-right: 2rem !important;
+
 }
 
 #webforms_send_section > input, #webforms_send_section > button, #webforms_load_json_section > button {
@@ -110,6 +114,7 @@ justify-content: center;
 font-size: 1rem;
 font-weight: bold;
 color: #2980b9;
+padding-bottom: 2rem;
 }
 
 .current-page {
@@ -135,34 +140,35 @@ margin-left: 5px;
   width: 100%;
   margin-bottom: 0.8rem !important;
 }
-}</style></head>
-  <body>
-    <section id="webforms_load_json_section" style="display: none;">
-        <input type="file" accept=".json" id="webforms_json_input">
-      <button id="webforms_load_json_button">Cargar JSON</button>
-    </section>
-    <div id="webforms_wizard">
-        <form id="webforms_main_form"></form>
-    </div>
-    
-    <hr>
-    <section id="webforms_send_section">
-      <input type="submit" id="webforms_send" value="Aceptar" form="webforms_main_form">
-    </section>
-    <div id="webforms_page_number" class="page-number"></div>
-    <div class="toast" id="webforms_toast">
-      <div class="toast-content">
-      </div>
-  </div>
-    <div class="modal">
-      <div class="modal-content">
-        <div class="loader"></div>
-      </div>
-    </div>
+}
+    </style>
+</head>
+<body>
+<section id="webforms_load_json_section" style="display: none;">
+    <input type="file" accept=".json" id="webforms_json_input">
+    <button id="webforms_load_json_button">Cargar JSON</button>
+</section>
+<div id="webforms_wizard">
+    <form id="webforms_main_form"></form>
+</div>
 
-    
-   
-  <script>class EventEmitter {
+<hr>
+<section id="webforms_send_section">
+    <input type="submit" id="webforms_send" value="Aceptar" form="webforms_main_form">
+</section>
+<div id="webforms_page_number" class="page-number"></div>
+<div class="toast" id="webforms_toast">
+    <div class="toast-content">
+    </div>
+</div>
+<div class="modal">
+    <div class="modal-content">
+        <div class="loader"></div>
+    </div>
+</div>
+
+
+<script>class EventEmitter {
     constructor() {
         this.events = {};
     }
@@ -285,6 +291,10 @@ class Wizard {
         else {
             inputs = form.querySelectorAll('input');
         }
+        const visibleInputs = Array.from(inputs).filter(input => {
+            const computedStyle = window.getComputedStyle(input);
+            return computedStyle.getPropertyValue('display') !== 'none';
+        });
         let isValid = true; // Variable de control para la validación
         // Función para validar un input específico
         const validateInput = (input) => {
@@ -303,7 +313,7 @@ class Wizard {
         };
         // Validar formulario completo o un input específico
         if (selectedInput === null) {
-            inputs.forEach(input => {
+            visibleInputs.forEach(input => {
                 validateInput(input);
             });
         }
@@ -629,7 +639,9 @@ class WebForms {
             input.dataset.rules = "NIFNIE";
         }
         if (item.today) {
+            input.valueAsDate = new Date();
             input.setAttribute("value", this.formatDateISOToYYYYMMDD());
+
         }
     }
     //TODO: refactor
@@ -911,12 +923,14 @@ class WebForms {
         const webforms_send_button = document.createElement("input");
         const webforms_cancel_button = document.createElement("button");
         const webforms_attachments_button = document.createElement("button");
+        const paginator = document.createElement("div");
         // Configurar atributos y contenido de los elementos
         webforms_wizard.setAttribute("id", "webforms_wizard");
         webforms_main_form.setAttribute("id", "webforms_main_form");
         webforms_send_section.setAttribute("id", "webforms_send_section");
         webforms_cancel_button.setAttribute("id", "webforms_cancel_button");
         webforms_attachments_button.setAttribute("id", "webforms_attachments_button");
+        paginator.setAttribute("id", "webforms_page_number");
         webforms_send_button.setAttribute("id", "webforms_send");
         webforms_send_button.setAttribute("type", "submit");
         webforms_send_button.setAttribute("value", "Aceptar");
@@ -928,6 +942,7 @@ class WebForms {
         webforms_send_section.classList.add("container-md");
         webforms_wizard.classList.add("container-md");
         webforms_cancel_button.classList.add("button--cancel");
+        paginator.classList.add("page-number");
         // Adjuntar elementos al DOM
         this.container.append(webforms_wizard);
         webforms_wizard.append(webforms_main_form);
@@ -935,6 +950,7 @@ class WebForms {
         webforms_send_section.append(webforms_cancel_button);
         webforms_send_section.append(webforms_attachments_button);
         webforms_send_section.append(webforms_send_button);
+        this.container.append(paginator);
         // Agregar evento de clic al botón de cancelar
         webforms_cancel_button.addEventListener("click", () => {
             // Acceder al callback utilizando el contexto correcto
@@ -976,11 +992,15 @@ class WebForms {
     close() {
         const webforms_wizard = document.getElementById("webforms_wizard");
         const webforms_send_section = document.getElementById("webforms_send_section");
+        const paginator = document.getElementById("webforms_page_number");
         if (webforms_wizard) {
             webforms_wizard.remove();
         }
         if (webforms_send_section) {
             webforms_send_section.remove();
+        }
+        if (paginator) {
+            paginator.remove();
         }
     }
     /** Setear los formValues */
@@ -1060,6 +1080,8 @@ function validateNIFNIE(value) {
     return false;
 }
 
-window.webForms = new WebForms();</script>
+window.webForms = new WebForms();
+</script>
 
-</body></html>
+</body>
+</html>
